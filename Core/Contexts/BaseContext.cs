@@ -31,11 +31,11 @@ public class BaseContext : IdentityDbContext<User, IdentityRole<int>, int> {
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<Game>()
-            .HasMany(game => game.Platforms)
-            .WithMany(platform => platform.Games)
-            .UsingEntity(join => join.ToTable("games_platforms"))
-            .HasKey("id");
+        // modelBuilder.Entity<Game>()
+        //     .HasMany(game => game.Platforms)
+        //     .WithMany(platform => platform.Games)
+        //     .UsingEntity(join => join.ToTable("games_platforms"))
+        //     .HasKey("Id");
 
         seed(modelBuilder);
     }
@@ -53,7 +53,7 @@ public class BaseContext : IdentityDbContext<User, IdentityRole<int>, int> {
 
         seedGames(modelBuilder);
 
-        seedGamesPlatforms(modelBuilder);
+        seedGamePlatforms(modelBuilder);
 
         seedReviews(modelBuilder);
     }
@@ -125,19 +125,19 @@ public class BaseContext : IdentityDbContext<User, IdentityRole<int>, int> {
                 Id = 1, 
                 Username = "sim1-dev",
                 UserId = 1,
-                softwarehouse_id = 1,
+                SoftwareHouseId = 1,
             },
             new { 
                 Id = 2, 
                 Username = "andreasssss",
                 UserId = 2,
-                softwarehouse_id = 1,
+                SoftwareHouseId = 1,
             },
             new { 
                 Id = 3, 
                 Username = "johnSmith15",
                 UserId = 3,
-                softwarehouse_id = 2,
+                SoftwareHouseId = 2,
             }
         );
     }
@@ -175,8 +175,8 @@ public class BaseContext : IdentityDbContext<User, IdentityRole<int>, int> {
                 Description = "Developed by the creators of Grand Theft Auto V and Red Dead Redemption, Red Dead Redemption 2 is an epic tale of life in America's unforgiving heartland.", 
                 ReleaseDate = new DateTime(2018, 10, 26), 
                 Price = 79.99M,
-                category_id = 1,
-                softwarehouse_id = 1,
+                CategoryId = 1,
+                SoftwareHouseId = 1,
             },
             new { 
                 Id = 2, 
@@ -184,18 +184,18 @@ public class BaseContext : IdentityDbContext<User, IdentityRole<int>, int> {
                 Description = "The Last of Us Part II is a 2020 action-adventure game developed by Naughty Dog and published by Sony Interactive Entertainment.", 
                 ReleaseDate = new DateTime(2020, 08, 11), 
                 Price = 59.99M,
-                category_id = 2, 
-                softwarehouse_id = 8 
+                CategoryId = 2, 
+                SoftwareHouseId = 8 
             }
         );
     }
 
-    public void seedGamesPlatforms(ModelBuilder modelBuilder) {
-        modelBuilder.Entity("games_platforms").HasData(
-            new { Id = 1, GameId = 1, PlatformId = 1 },
-            new { Id = 2, GameId = 1, PlatformId = 2 },
-            new { Id = 3, GameId = 1, PlatformId = 4 },
-            new { Id = 4, GameId = 2, PlatformId = 4 }
+    public void seedGamePlatforms(ModelBuilder modelBuilder) {
+        modelBuilder.Entity("GamePlatform").HasData(
+            new { GamesId = 1, PlatformsId = 1 },
+            new { GamesId = 1, PlatformsId = 2 },
+            new { GamesId = 1, PlatformsId = 4 },
+            new { GamesId = 2, PlatformsId = 4 }
         );
     }
 

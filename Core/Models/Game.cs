@@ -26,9 +26,13 @@ public class Game {
 
     [Required]
 	public SoftwareHouse SoftwareHouse {get; set;} = null!;
+    public int SoftwareHouseId {get; set;}
 
     [Required]
     public Category Category {get; set;} = null!;
+
+    public int CategoryId {get; set;}
+
 
     public List<Review>? Reviews {get; set;}
     // public List<User>? Buyers { get; set; }

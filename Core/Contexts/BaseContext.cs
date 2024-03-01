@@ -31,12 +31,6 @@ public class BaseContext : IdentityDbContext<User, IdentityRole<int>, int> {
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         base.OnModelCreating(modelBuilder);
 
-        // modelBuilder.Entity<Game>()
-        //     .HasMany(game => game.Platforms)
-        //     .WithMany(platform => platform.Games)
-        //     .UsingEntity(join => join.ToTable("games_platforms"))
-        //     .HasKey("Id");
-
         seed(modelBuilder);
     }
 
@@ -70,6 +64,8 @@ public class BaseContext : IdentityDbContext<User, IdentityRole<int>, int> {
 
         User admin = new User { 
             Id = 1, 
+            FirstName = "Admin",
+            LastName = "Admin",
             UserName = "admin", 
             NormalizedUserName = "ADMIN", 
             Email = "admin@admin.com", 
@@ -80,6 +76,8 @@ public class BaseContext : IdentityDbContext<User, IdentityRole<int>, int> {
 
         User user = new User { 
             Id = 2, 
+            FirstName = "Andrea",
+            LastName = "Test",
             UserName = "and_rea", 
             NormalizedUserName = "AND_REA", 
             Email = "and.rea@test.com", 
@@ -90,6 +88,8 @@ public class BaseContext : IdentityDbContext<User, IdentityRole<int>, int> {
 
         User johnSmith = new User { 
             Id = 3, 
+            FirstName = "John",
+            LastName = "Smith",
             UserName = "johnSmith15", 
             NormalizedUserName = "JOHNSMITH15", 
             Email = "john.smith@test.com", 

@@ -11,7 +11,6 @@ namespace GamesAPI.Controllers;
 public class GameController : ControllerBase
 {
     private readonly IMapper _mapper;
-
     private readonly GameService _gameService;
 
     public GameController(IMapper mapper, GameService gameService) {
@@ -44,30 +43,33 @@ public class GameController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<GameDto>> Create(GameDto gameDto) {
-        if(gameDto is null)
+    public async Task<ActionResult<GameDto>> Create(CreateGameDto createGameDto) {
+        if(createGameDto is null)
             return BadRequest();
 
-        Game game = _mapper.Map<Game>(gameDto);
+        Game game = _mapper.Map<Game>(createGameDto);
 
-        Game createdGame = await this._gameService.Create(game);
+        Game? createdGame = await this._gameService.Create(game);
 
+        if(createdGame is null)
+            return StatusCode(500, "An error has occurred while creating. Please contact the system administrator");     
+            
         GameDto createdGameDto = _mapper.Map<GameDto>(createdGame);
 
         return createdGameDto;
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult<GameDto>> Update(int id, [FromBody] GameDto gameDto) {
-        if(gameDto is null)
+    public async Task<ActionResult<GameDto>> Update(int id, [FromBody] UpdateGameDto updateGameDto) {
+        if(updateGameDto is null)
             return BadRequest();
 
-        Game game = _mapper.Map<Game>(gameDto);
+        Game game = _mapper.Map<Game>(updateGameDto);
 
         Game? updatedGame = await this._gameService.Update(id, game);
 
         if(updatedGame is null)
-            return NotFound();        
+            return StatusCode(500, "An error has occurred while updating. Please contact the system administrator");      
 
         GameDto updatedGameDto = _mapper.Map<GameDto>(updatedGame);
 
@@ -75,6 +77,7 @@ public class GameController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    // TODO policy only if developer belongs to software
     public async Task<ActionResult<GameDto>> Delete(int id) {
             
         Game? game = await this._gameService.Delete(id);

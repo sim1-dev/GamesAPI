@@ -10,6 +10,8 @@ public class Review {
 
     [Column("ReviewerUserId")]
     public int UserId { get; set; }
+
+    public User ReviewerUser { get; set; } = null!;
     
     [Range(0, 10)]
     public int Score { get; set; }

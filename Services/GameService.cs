@@ -1,4 +1,3 @@
-using System.Collections.ObjectModel;
 using GamesAPI.Core.DataContexts;
 using GamesAPI.Core.Models;
 using Microsoft.EntityFrameworkCore;
@@ -33,13 +32,12 @@ public class GameService {
     }
 
     public async Task<Game?> Create(Game game) {
+
         this._db.Games.Add(game);
 
         await this._db.SaveChangesAsync();
 
-        Game? createdGame = await this.Find(game.Id);
-
-        return createdGame;
+        return game;
     }
 
     public async Task<Game?> Update(int id, Game game) {
@@ -64,7 +62,8 @@ public class GameService {
 
         this._db.Games.Remove(game);
 
+        await this._db.SaveChangesAsync();
+
         return game;
     }
-
 }

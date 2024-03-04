@@ -37,8 +37,10 @@ public class BaseContext : IdentityDbContext<User, Role, int> {
 
     private void seed(ModelBuilder modelBuilder) {
 
-        seedRoles(modelBuilder);
         seedUsers(modelBuilder);
+        seedRoles(modelBuilder);
+
+        seedUserRoles(modelBuilder);
 
         seedSoftwareHouses(modelBuilder);
         seedDevelopers(modelBuilder);
@@ -53,6 +55,48 @@ public class BaseContext : IdentityDbContext<User, Role, int> {
         seedReviews(modelBuilder);
     }
 
+    private void seedUsers(ModelBuilder modelBuilder) {
+
+        modelBuilder.Entity<User>().HasData(
+            new User { 
+                Id = 1, 
+                FirstName = "Admin",
+                LastName = "Admin",
+                UserName = "admin@rockstargames.com", 
+                NormalizedUserName = "ADMIN@ROCKSTARGAMES.COM", 
+                Email = "admin@rockstargames.com", 
+                NormalizedEmail = "ADMIN@ROCKSTARGAMES.COM", 
+                EmailConfirmed = true,
+                PasswordHash = this._passwordHasher.HashPassword(null!, "Password1!"),
+                SecurityStamp = Guid.NewGuid().ToString()
+            },
+            new User { 
+                Id = 2, 
+                FirstName = "Andrea",
+                LastName = "Test",
+                UserName = "and.rea@rockstargames.com", 
+                NormalizedUserName = "AND.REA@ROCKSTARGAMES.COM", 
+                Email = "and.rea@rockstargames.com", 
+                NormalizedEmail = "AND.REA@ROCKSTARGAMES.COM", 
+                EmailConfirmed = true,
+                PasswordHash = this._passwordHasher.HashPassword(null!, "Password1!"),
+                SecurityStamp = Guid.NewGuid().ToString()
+            },
+            new User { 
+                Id = 3, 
+                FirstName = "John",
+                LastName = "Smith",
+                UserName = "john.smith@ubisoft.com", 
+                NormalizedUserName = "JOHN.SMITH@UBISOFT.COM", 
+                Email = "john.smith@ubisoft.com", 
+                NormalizedEmail = "JOHN.SMITH@UBISOFT.COM", 
+                EmailConfirmed = true,
+                PasswordHash = this._passwordHasher.HashPassword(null!, "Password1!"),
+                SecurityStamp = Guid.NewGuid().ToString()
+            }
+        );
+    }
+
     private void seedRoles(ModelBuilder modelBuilder) {
         modelBuilder.Entity<Role>().HasData(
             new Role { Id = 1, Name = "Admin", NormalizedName = "ADMIN" },
@@ -60,53 +104,14 @@ public class BaseContext : IdentityDbContext<User, Role, int> {
         );
     }
 
-    private void seedUsers(ModelBuilder modelBuilder) {
-        User admin = new User { 
-            Id = 1, 
-            FirstName = "Admin",
-            LastName = "Admin",
-            UserName = "admin@rockstargames.com", 
-            NormalizedUserName = "ADMIN@ROCKSTARGAMES.COM", 
-            Email = "admin@rockstargames.com", 
-            NormalizedEmail = "ADMIN@ROCKSTARGAMES.COM", 
-            EmailConfirmed = true,
-            PasswordHash = this._passwordHasher.HashPassword(null!, "Password1!"),
-            SecurityStamp = Guid.NewGuid().ToString()
-        };
-
-        User user = new User { 
-            Id = 2, 
-            FirstName = "Andrea",
-            LastName = "Test",
-            UserName = "and.rea@rockstargames.com", 
-            NormalizedUserName = "AND.REA@ROCKSTARGAMES.COM", 
-            Email = "and.rea@rockstargames.com", 
-            NormalizedEmail = "AND.REA@ROCKSTARGAMES.COM", 
-            EmailConfirmed = true,
-            PasswordHash = this._passwordHasher.HashPassword(null!, "Password1!"),
-            SecurityStamp = Guid.NewGuid().ToString()
-        };
-
-        User johnSmith = new User { 
-            Id = 3, 
-            FirstName = "John",
-            LastName = "Smith",
-            UserName = "john.smith@ubisoft.com", 
-            NormalizedUserName = "JOHN.SMITH@UBISOFT.COM", 
-            Email = "john.smith@ubisoft.com", 
-            NormalizedEmail = "JOHN.SMITH@UBISOFT.COM", 
-            EmailConfirmed = true,
-            PasswordHash = this._passwordHasher.HashPassword(null!, "Password1!"),
-            SecurityStamp = Guid.NewGuid().ToString()
-        };
-
-        modelBuilder.Entity<User>().HasData(
-            admin, 
-            user, 
-            johnSmith
+    private void seedUserRoles(ModelBuilder modelBuilder) {
+        modelBuilder.Entity<IdentityUserRole<int>>().HasData(
+            new IdentityUserRole<int> { RoleId = 1, UserId = 1 },
+            new IdentityUserRole<int> { RoleId = 2, UserId = 2 },
+            new IdentityUserRole<int> { RoleId = 2, UserId = 3 }
         );
     }
-
+    
     private void seedSoftwareHouses(ModelBuilder modelBuilder) {
         modelBuilder.Entity<SoftwareHouse>().HasData(
             new SoftwareHouse { Id = 1, Name = "Rockstar Games" },

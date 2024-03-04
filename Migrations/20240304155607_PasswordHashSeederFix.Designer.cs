@@ -3,6 +3,7 @@ using System;
 using GamesAPI.Core.DataContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GamesAPI.Migrations
 {
     [DbContext(typeof(BaseContext))]
-    partial class BaseContextModelSnapshot : ModelSnapshot
+    [Migration("20240304155607_PasswordHashSeederFix")]
+    partial class PasswordHashSeederFix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -314,7 +317,7 @@ namespace GamesAPI.Migrations
                         {
                             Id = 1,
                             Comment = "This game is awesome!",
-                            CreatedAt = new DateTime(2024, 3, 4, 17, 52, 30, 152, DateTimeKind.Local).AddTicks(8437),
+                            CreatedAt = new DateTime(2024, 3, 4, 16, 56, 7, 489, DateTimeKind.Local).AddTicks(110),
                             GameId = 1,
                             Score = 9,
                             UserId = 1
@@ -323,7 +326,7 @@ namespace GamesAPI.Migrations
                         {
                             Id = 2,
                             Comment = "Pretty good game, but gets boring after the main questline",
-                            CreatedAt = new DateTime(2024, 3, 4, 17, 52, 30, 152, DateTimeKind.Local).AddTicks(8496),
+                            CreatedAt = new DateTime(2024, 3, 4, 16, 56, 7, 489, DateTimeKind.Local).AddTicks(180),
                             GameId = 1,
                             Score = 7,
                             UserId = 2
@@ -332,7 +335,7 @@ namespace GamesAPI.Migrations
                         {
                             Id = 3,
                             Comment = "I loved this game!",
-                            CreatedAt = new DateTime(2024, 3, 4, 17, 52, 30, 152, DateTimeKind.Local).AddTicks(8614),
+                            CreatedAt = new DateTime(2024, 3, 4, 16, 56, 7, 489, DateTimeKind.Local).AddTicks(182),
                             GameId = 2,
                             Score = 10,
                             UserId = 1
@@ -341,7 +344,7 @@ namespace GamesAPI.Migrations
                         {
                             Id = 4,
                             Comment = "I didn't like this game at all...",
-                            CreatedAt = new DateTime(2024, 3, 4, 17, 52, 30, 152, DateTimeKind.Local).AddTicks(8616),
+                            CreatedAt = new DateTime(2024, 3, 4, 16, 56, 7, 489, DateTimeKind.Local).AddTicks(184),
                             GameId = 1,
                             Score = 1,
                             UserId = 2
@@ -500,9 +503,6 @@ namespace GamesAPI.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<int?>("RoleId")
-                        .HasColumnType("int");
-
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("longtext");
 
@@ -522,8 +522,6 @@ namespace GamesAPI.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
 
-                    b.HasIndex("RoleId");
-
                     b.ToTable("AspNetUsers", (string)null);
 
                     b.HasData(
@@ -531,55 +529,55 @@ namespace GamesAPI.Migrations
                         {
                             Id = 1,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "87f3c342-5d69-4d40-bda8-c8e2a2c20c45",
-                            Email = "admin@rockstargames.com",
+                            ConcurrencyStamp = "4da44d99-2d9f-4a73-95a0-d7778f3257e2",
+                            Email = "admin@admin.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",
                             LastName = "Admin",
                             LockoutEnabled = false,
-                            NormalizedEmail = "ADMIN@ROCKSTARGAMES.COM",
-                            NormalizedUserName = "ADMIN@ROCKSTARGAMES.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEG1B34aDYvLUU7tEKUlLns2yDUsKteYOuM81r4NfxMNl94LM19vzJxyRil5UkhN6dg==",
+                            NormalizedEmail = "ADMIN@ADMIN.COM",
+                            NormalizedUserName = "ADMIN@ADMIN.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEDOh5TfuVpe0xArHEV5qUKUa3QVz/MD7BUTVMgZuYUYxPjAEsfJ26ThRplfi92OTAQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "c7273cab-5202-445e-aca4-7ac5efe45b4c",
+                            SecurityStamp = "eec623b1-8272-4043-856a-b5878d5a8d56",
                             TwoFactorEnabled = false,
-                            UserName = "admin@rockstargames.com"
+                            UserName = "admin@admin.com"
                         },
                         new
                         {
                             Id = 2,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "0dfca3a7-34ad-49d7-b422-63c4a7572fbb",
-                            Email = "and.rea@rockstargames.com",
+                            ConcurrencyStamp = "8cf8b60d-1e0a-4def-bcd8-92b1a15055e1",
+                            Email = "and.rea@test.com",
                             EmailConfirmed = true,
                             FirstName = "Andrea",
                             LastName = "Test",
                             LockoutEnabled = false,
-                            NormalizedEmail = "AND.REA@ROCKSTARGAMES.COM",
-                            NormalizedUserName = "AND.REA@ROCKSTARGAMES.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEOr4d3fTVmnsALgCbQpLMVjn0w0sBSyp0k/rjSXYv5mQDPDSxP7Kcwfx/zROCMolQA==",
+                            NormalizedEmail = "AND.REA@TEST.COM",
+                            NormalizedUserName = "AND.REA@TEST.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEG02ag5/X1k0Qa4evCOWnoyo2KLG9Ct6wfQdgsLvp1+5JMuoaUaFUILzXTxCT63Z5w==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "a144c0b2-f0a5-43d7-98d0-5397a1622b97",
+                            SecurityStamp = "eaa37acd-4c97-4da0-94e4-cf2c1fd50f32",
                             TwoFactorEnabled = false,
-                            UserName = "and.rea@rockstargames.com"
+                            UserName = "and.rea@test.com"
                         },
                         new
                         {
                             Id = 3,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "eed13eda-da9f-4671-b49b-91037057139b",
-                            Email = "john.smith@ubisoft.com",
+                            ConcurrencyStamp = "9618e573-4ffc-4415-b553-66b8beb08992",
+                            Email = "john.smith@test.com",
                             EmailConfirmed = true,
                             FirstName = "John",
                             LastName = "Smith",
                             LockoutEnabled = false,
-                            NormalizedEmail = "JOHN.SMITH@UBISOFT.COM",
-                            NormalizedUserName = "JOHN.SMITH@UBISOFT.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEF5knrQMsflLEpb9QVfqWsLPlQRicjWoN6vdlaGm3Mc4l8fzwRmqNfL0L407+c+rRA==",
+                            NormalizedEmail = "JOHN.SMITH@TEST.COM",
+                            NormalizedUserName = "JOHN.SMITH@TEST.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEMWzUaBb45lhRWV/9iZ8dwXToy6eBznCY+5oHDqFutS1hqNReERfaAf8Ci2WfNizqw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "52c4a5f1-28bf-463f-910b-a341c0363144",
+                            SecurityStamp = "613bc5b8-3f44-4be6-bcf5-eb1a21626924",
                             TwoFactorEnabled = false,
-                            UserName = "john.smith@ubisoft.com"
+                            UserName = "john.smith@test.com"
                         });
                 });
 
@@ -661,23 +659,6 @@ namespace GamesAPI.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = 1,
-                            RoleId = 1
-                        },
-                        new
-                        {
-                            UserId = 2,
-                            RoleId = 2
-                        },
-                        new
-                        {
-                            UserId = 3,
-                            RoleId = 2
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
@@ -769,13 +750,6 @@ namespace GamesAPI.Migrations
                     b.Navigation("ReviewerUser");
                 });
 
-            modelBuilder.Entity("GamesAPI.Core.Models.User", b =>
-                {
-                    b.HasOne("GamesAPI.Core.Models.Role", null)
-                        .WithMany("Users")
-                        .HasForeignKey("RoleId");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
                     b.HasOne("GamesAPI.Core.Models.Role", null)
@@ -835,11 +809,6 @@ namespace GamesAPI.Migrations
             modelBuilder.Entity("GamesAPI.Core.Models.Game", b =>
                 {
                     b.Navigation("Reviews");
-                });
-
-            modelBuilder.Entity("GamesAPI.Core.Models.Role", b =>
-                {
-                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("GamesAPI.Core.Models.SoftwareHouse", b =>

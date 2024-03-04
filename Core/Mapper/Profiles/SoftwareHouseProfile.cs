@@ -7,8 +7,9 @@ class SoftwareHouseProfile : Profile {
     public SoftwareHouseProfile() {
         // CreateMap<CreateSoftwareHouseDto, SoftwareHouse>();
         // CreateMap<UpdateSoftwareHouseDto, SoftwareHouse>();
-        CreateMap<SoftwareHouse, SoftwareHouseDto>()
-            .ForMember(softwareHouseDto => softwareHouseDto.DeveloperDtos, option => option.MapFrom(softwareHouse => softwareHouse.Developers))
+        CreateMap<SoftwareHouse, SoftwareHouseDto>();
+        CreateMap<SoftwareHouse, SoftwareHouseDetailDto>()
+            .ForMember(softwareHouseDetailDto => softwareHouseDetailDto.DeveloperDtos, option => option.MapFrom(softwareHouse => softwareHouse.Developers))
         ;
     }
 }

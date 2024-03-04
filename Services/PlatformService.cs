@@ -15,7 +15,15 @@ public class PlatformService {
     }
     
     public async Task<Platform?> Find(int id) {
-        Platform? platform = await _db.Platforms.FindAsync(id);
+        Platform? platform = await _db.Platforms
+            .Include(platform => platform.Games)
+        .FirstOrDefaultAsync(platform => platform.Id == id);
+
+        return platform;
+    }
+
+    public async Task<Platform?> FindByName(string name) {
+        Platform? platform = await _db.Platforms.FirstOrDefaultAsync(p => p.Name == name);
 
         return platform;
     }
@@ -52,6 +60,8 @@ public class PlatformService {
             return null;
 
         this._db.Platforms.Remove(platform);
+
+        await this._db.SaveChangesAsync();
 
         return platform;
     }

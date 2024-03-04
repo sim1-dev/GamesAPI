@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace GamesAPI.Core.DataContexts;
 
-public class BaseContext : IdentityDbContext<User, IdentityRole<int>, int> {
+public class BaseContext : IdentityDbContext<User, Role, int> {
     public BaseContext() {
     }
 
@@ -14,7 +14,7 @@ public class BaseContext : IdentityDbContext<User, IdentityRole<int>, int> {
 
     // Authorization
     public new DbSet<User> Users {get; set;}
-    public new DbSet<IdentityRole<int>> Roles {get; set;}
+    public new DbSet<Role> Roles {get; set;}
 
     // Discriminators
     public DbSet<Platform> Platforms {get; set;}
@@ -53,13 +53,14 @@ public class BaseContext : IdentityDbContext<User, IdentityRole<int>, int> {
     }
 
     private void seedRoles(ModelBuilder modelBuilder) {
-        modelBuilder.Entity<IdentityRole<int>>().HasData(
-            new IdentityRole<int> { Id = 1, Name = "Admin", NormalizedName = "ADMIN" },
-            new IdentityRole<int> { Id = 2, Name = "User", NormalizedName = "USER" }
+        modelBuilder.Entity<Role>().HasData(
+            new Role { Id = 1, Name = "Admin", NormalizedName = "ADMIN" },
+            new Role { Id = 2, Name = "User", NormalizedName = "USER" }
         );
     }
 
     private void seedUsers(ModelBuilder modelBuilder) {
+        // TODO fix password haser: non autentica (manca la compilazione del campo SecurityStamp?)
         PasswordHasher<User> passwordHasher = new PasswordHasher<User>(); // TODO? inject?
 
         User admin = new User { 

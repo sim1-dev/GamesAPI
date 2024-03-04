@@ -6,10 +6,11 @@ using Microsoft.AspNetCore.Identity;
 namespace GamesAPI.Core.DataContexts;
 
 public class BaseContext : IdentityDbContext<User, Role, int> {
-    public BaseContext() {
-    }
 
-    public BaseContext(DbContextOptions<BaseContext> options) : base(options){
+    private readonly PasswordHasher<User> _passwordHasher;
+
+    public BaseContext(DbContextOptions<BaseContext> options, PasswordHasher<User> passwordHasher) : base(options){
+        this._passwordHasher = passwordHasher;
     }
 
     // Authorization
@@ -60,44 +61,44 @@ public class BaseContext : IdentityDbContext<User, Role, int> {
     }
 
     private void seedUsers(ModelBuilder modelBuilder) {
-        // TODO fix password haser: non autentica (manca la compilazione del campo SecurityStamp?)
-        PasswordHasher<User> passwordHasher = new PasswordHasher<User>(); // TODO? inject?
-
         User admin = new User { 
             Id = 1, 
             FirstName = "Admin",
             LastName = "Admin",
-            UserName = "admin", 
-            NormalizedUserName = "ADMIN", 
-            Email = "admin@admin.com", 
-            NormalizedEmail = "ADMIN@ADMIN.COM", 
+            UserName = "admin@rockstargames.com", 
+            NormalizedUserName = "ADMIN@ROCKSTARGAMES.COM", 
+            Email = "admin@rockstargames.com", 
+            NormalizedEmail = "ADMIN@ROCKSTARGAMES.COM", 
             EmailConfirmed = true,
+            PasswordHash = this._passwordHasher.HashPassword(null!, "Password1!"),
+            SecurityStamp = Guid.NewGuid().ToString()
         };
-        admin.PasswordHash = passwordHasher.HashPassword(admin, "admin");
 
         User user = new User { 
             Id = 2, 
             FirstName = "Andrea",
             LastName = "Test",
-            UserName = "and_rea", 
-            NormalizedUserName = "AND_REA", 
-            Email = "and.rea@test.com", 
-            NormalizedEmail = "AND.REA@TEST.COM", 
+            UserName = "and.rea@rockstargames.com", 
+            NormalizedUserName = "AND.REA@ROCKSTARGAMES.COM", 
+            Email = "and.rea@rockstargames.com", 
+            NormalizedEmail = "AND.REA@ROCKSTARGAMES.COM", 
             EmailConfirmed = true,
+            PasswordHash = this._passwordHasher.HashPassword(null!, "Password1!"),
+            SecurityStamp = Guid.NewGuid().ToString()
         };
-        user.PasswordHash = passwordHasher.HashPassword(user, "and_rea");
 
         User johnSmith = new User { 
             Id = 3, 
             FirstName = "John",
             LastName = "Smith",
-            UserName = "johnSmith15", 
-            NormalizedUserName = "JOHNSMITH15", 
-            Email = "john.smith@test.com", 
-            NormalizedEmail = "JOHN.SMITH@TEST.COM", 
+            UserName = "john.smith@ubisoft.com", 
+            NormalizedUserName = "JOHN.SMITH@UBISOFT.COM", 
+            Email = "john.smith@ubisoft.com", 
+            NormalizedEmail = "JOHN.SMITH@UBISOFT.COM", 
             EmailConfirmed = true,
+            PasswordHash = this._passwordHasher.HashPassword(null!, "Password1!"),
+            SecurityStamp = Guid.NewGuid().ToString()
         };
-        johnSmith.PasswordHash = passwordHasher.HashPassword(johnSmith, "johnSmith");
 
         modelBuilder.Entity<User>().HasData(
             admin, 

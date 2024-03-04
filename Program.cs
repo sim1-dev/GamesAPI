@@ -33,6 +33,9 @@ builder.Services
 ;
 
 builder.Services
+    .AddSingleton<PasswordHasher<User>>();
+
+builder.Services
     .AddScoped<IAuthorizationHandler, IsGameDeveloperHandler>()
     .AddScoped(typeof(GameService))
     .AddScoped(typeof(PlatformService));

@@ -20,7 +20,8 @@ public class GameController : ControllerBase
         this._gameService = gameService;
         this._platformService = platformService;
     }
-
+    
+    [AllowAnonymous]
 	[HttpGet]
     public async Task<ActionResult<Collection<GameDto>>> Get() {
         List<Game>? games = await this._gameService.GetAll();
@@ -33,6 +34,7 @@ public class GameController : ControllerBase
         return Ok(gameDtos);
     }
 
+    [AllowAnonymous]
     [HttpGet("{id}")]
     public async Task<ActionResult<GameDetailDto>> Find(int id) {
         Game? game = await this._gameService.Find(id);
@@ -45,6 +47,7 @@ public class GameController : ControllerBase
         return Ok(gameDetailDto);
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult<GameDto>> Create(CreateGameDto createGameDto) {
         if(createGameDto is null)
@@ -66,6 +69,7 @@ public class GameController : ControllerBase
         return createdGameDto;
     }
 
+    [Authorize(Policy = "IsGameDeveloper")]
     [HttpPut("{id}")]
     public async Task<ActionResult<GameDto>> Update(int id, [FromBody] UpdateGameDto updateGameDto) {
         if(updateGameDto is null)
@@ -95,8 +99,7 @@ public class GameController : ControllerBase
         return Ok();
     }
 
-    // TODO add platform to game, remove platform to game
-
+    [Authorize(Policy = "IsGameDeveloper")]
     [HttpPut("{id}/addPlatform")]
     public async Task<ActionResult<GameDto>> AddPlatform(int id, [FromBody] int platformId) {
         Game? game = await this._gameService.Find(id);
@@ -109,23 +112,20 @@ public class GameController : ControllerBase
         if(platform is null)
             return NotFound("Platform not found");
 
-        game.Platforms.Add(platform);
+        Game? updatedGame = await this._gameService.AddPlatform(game, platform);
 
-        game = await this._gameService.Update(id, game);
-
-        if(game is null)
+        if(updatedGame is null)
             return StatusCode(500, "An error has occurred while updating. Please contact the system administrator");
 
-        GameDto gameDto = _mapper.Map<GameDto>(game);
+        GameDto updatedGameDto = _mapper.Map<GameDto>(updatedGame);
 
-        return gameDto;
+        return updatedGameDto;
     }
 
+    [Authorize(Policy = "IsGameDeveloper")]
     [HttpPut("{id}/removePlatform")]
     public async Task<ActionResult<GameDto>> RemovePlatform(int id, [FromBody] int platformId) {
         Game? game = await this._gameService.Find(id);
-
-        // TODO make gameService.removePlatform(game, platform)
 
         if(game is null)
             return NotFound("Game not found");
@@ -135,15 +135,13 @@ public class GameController : ControllerBase
         if(platform is null)
             return NotFound("Platform not found");
 
-        game.Platforms.Remove(platform);
+        Game? updatedGame = await this._gameService.RemovePlatform(game, platform);
 
-        game = await this._gameService.Update(id, game);
-
-        if(game is null)
+        if(updatedGame is null)
             return StatusCode(500, "An error has occurred while updating. Please contact the system administrator");
 
-        GameDto gameDto = _mapper.Map<GameDto>(game);
+        GameDto updatedGameDto = _mapper.Map<GameDto>(updatedGame);
 
-        return gameDto;
+        return updatedGameDto;
     }
 }

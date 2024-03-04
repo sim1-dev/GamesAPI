@@ -14,17 +14,28 @@ var connectionString = builder.Configuration.GetConnectionString("BaseContext");
 
 builder.Services.AddDbContext<BaseContext>(option => option.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = IdentityConstants.BearerScheme;
+    options.DefaultChallengeScheme = IdentityConstants.BearerScheme;
+}).AddBearerToken();
+
 builder.Services
 	.AddAuthorization(option => {
         option.AddPolicy("IsGameDeveloper", policy => policy.Requirements.Add(new IsGameDeveloperRequirement()));
-	})
-	.AddIdentity<User, Role>()
+	});
+
+builder.Services
+	.AddIdentityApiEndpoints<User>()
+	.AddRoles<Role>()
 	.AddEntityFrameworkStores<BaseContext>()
-	.AddDefaultTokenProviders()
-    .AddApiEndpoints()
+	.AddDefaultTokenProviders();
 ;
 
-builder.Services.AddScoped<IAuthorizationHandler, IsGameDeveloperHandler>();
+builder.Services
+    .AddScoped<IAuthorizationHandler, IsGameDeveloperHandler>()
+    .AddScoped(typeof(GameService))
+    .AddScoped(typeof(PlatformService));
 
 builder.Services.AddAutoMapper(typeof(Program));
 
@@ -37,10 +48,10 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen(option => {
     option.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme {
-                 In = ParameterLocation.Header,
-                 Name = "Authorization",
-                 Type = SecuritySchemeType.ApiKey
-             }
+                In = ParameterLocation.Header,
+                Name = "Authorization",
+                Type = SecuritySchemeType.ApiKey
+            }
     );
     
     option.AddSecurityRequirement(new OpenApiSecurityRequirement {
@@ -57,10 +68,8 @@ builder.Services.AddSwaggerGen(option => {
     );
 });
 
-builder.Services.AddScoped(typeof(GameService));
-builder.Services.AddScoped(typeof(PlatformService));
-
 var app = builder.Build();
+app.UseAuthorization();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment()) {
@@ -68,11 +77,9 @@ if (app.Environment.IsDevelopment()) {
     app.UseSwaggerUI();
 }
 
+app.MapIdentityApi<User>();
 app.UseHttpsRedirection();
 
-app.MapIdentityApi<User>();
-
-app.UseAuthorization();
 
 app.MapControllers();
 

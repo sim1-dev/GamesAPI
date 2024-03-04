@@ -1,6 +1,8 @@
 using System.Text.Json.Serialization;
 using GamesAPI.Core.DataContexts;
+using GamesAPI.Core.Middleware;
 using GamesAPI.Core.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -13,12 +15,16 @@ var connectionString = builder.Configuration.GetConnectionString("BaseContext");
 builder.Services.AddDbContext<BaseContext>(option => option.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
 builder.Services
-	.AddAuthorization()
-	.AddIdentityApiEndpoints<User>()
-	.AddRoles<Role>()
+	.AddAuthorization(option => {
+        option.AddPolicy("IsGameDeveloper", policy => policy.Requirements.Add(new IsGameDeveloperRequirement()));
+	})
+	.AddIdentity<User, Role>()
 	.AddEntityFrameworkStores<BaseContext>()
 	.AddDefaultTokenProviders()
+    .AddApiEndpoints()
 ;
+
+builder.Services.AddScoped<IAuthorizationHandler, IsGameDeveloperHandler>();
 
 builder.Services.AddAutoMapper(typeof(Program));
 
@@ -52,6 +58,7 @@ builder.Services.AddSwaggerGen(option => {
 });
 
 builder.Services.AddScoped(typeof(GameService));
+builder.Services.AddScoped(typeof(PlatformService));
 
 var app = builder.Build();
 

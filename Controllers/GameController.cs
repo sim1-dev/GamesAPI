@@ -84,6 +84,7 @@ public class GameController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Policy = "IsGameDeveloper")]
     public async Task<ActionResult<GameDto>> Delete(int id) {
             
         Game? game = await this._gameService.Delete(id);

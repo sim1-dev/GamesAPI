@@ -17,4 +17,5 @@ public class CreateGameDto {
 
     [Required(ErrorMessage = "Category required")]
     public required int CategoryId { get; set; }
+    public List<int>? PlatformIds { get; set; } = new List<int>();
 }

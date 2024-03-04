@@ -3,6 +3,7 @@ using GamesAPI.Core.Models;
 using System.Collections.ObjectModel;
 using AutoMapper;
 using GamesAPI.Dtos;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GamesAPI.Controllers;
 
@@ -12,10 +13,12 @@ public class GameController : ControllerBase
 {
     private readonly IMapper _mapper;
     private readonly GameService _gameService;
+    private readonly PlatformService _platformService;
 
-    public GameController(IMapper mapper, GameService gameService) {
+    public GameController(IMapper mapper, GameService gameService, PlatformService platformService) {
         this._mapper = mapper;
         this._gameService = gameService;
+        this._platformService = platformService;
     }
 
 	[HttpGet]
@@ -49,6 +52,10 @@ public class GameController : ControllerBase
 
         Game game = _mapper.Map<Game>(createGameDto);
 
+        // https://learn.microsoft.com/it-it/dotnet/fundamentals/code-analysis/quality-rules/ca1860
+        if(createGameDto.PlatformIds!.Count != 0)
+            game.Platforms = await this._platformService.FindByIds(createGameDto.PlatformIds!);
+
         Game? createdGame = await this._gameService.Create(game);
 
         if(createdGame is null)
@@ -77,7 +84,6 @@ public class GameController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    // TODO policy only if developer belongs to software
     public async Task<ActionResult<GameDto>> Delete(int id) {
             
         Game? game = await this._gameService.Delete(id);
@@ -86,5 +92,57 @@ public class GameController : ControllerBase
             return NotFound();
 
         return Ok();
+    }
+
+    // TODO add platform to game, remove platform to game
+
+    [HttpPut("{id}/addPlatform")]
+    public async Task<ActionResult<GameDto>> AddPlatform(int id, [FromBody] int platformId) {
+        Game? game = await this._gameService.Find(id);
+
+        if(game is null)
+            return NotFound("Game not found");
+
+        Platform? platform = await this._platformService.Find(platformId);
+
+        if(platform is null)
+            return NotFound("Platform not found");
+
+        game.Platforms.Add(platform);
+
+        game = await this._gameService.Update(id, game);
+
+        if(game is null)
+            return StatusCode(500, "An error has occurred while updating. Please contact the system administrator");
+
+        GameDto gameDto = _mapper.Map<GameDto>(game);
+
+        return gameDto;
+    }
+
+    [HttpPut("{id}/removePlatform")]
+    public async Task<ActionResult<GameDto>> RemovePlatform(int id, [FromBody] int platformId) {
+        Game? game = await this._gameService.Find(id);
+
+        // TODO make gameService.removePlatform(game, platform)
+
+        if(game is null)
+            return NotFound("Game not found");
+
+        Platform? platform = await this._platformService.Find(platformId);
+
+        if(platform is null)
+            return NotFound("Platform not found");
+
+        game.Platforms.Remove(platform);
+
+        game = await this._gameService.Update(id, game);
+
+        if(game is null)
+            return StatusCode(500, "An error has occurred while updating. Please contact the system administrator");
+
+        GameDto gameDto = _mapper.Map<GameDto>(game);
+
+        return gameDto;
     }
 }

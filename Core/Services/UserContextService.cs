@@ -2,8 +2,7 @@ using System.Security.Claims;
 
 namespace GamesAPI.Core.Services;
 
-public class UserContextService
-{
+public class UserContextService {
     private readonly IHttpContextAccessor _httpContextAccessor;
 
     public UserContextService(IHttpContextAccessor httpContextAccessor) {

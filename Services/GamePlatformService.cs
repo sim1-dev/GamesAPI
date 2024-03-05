@@ -13,26 +13,28 @@ public class GamePlatformService {
        this._gameService = gameService;
     }
 
-    public async Task<Game?> AddPlatformToGame(Game game, Platform platform) {
-        if(game.Platforms.Contains(platform))
-            return game;
+    // TODO rewrite
 
-        game.Platforms.Add(platform);
+    // public async Task<Game?> AddPlatformToGame(Game game, Platform platform) {
+    //     if(game.Platforms.Contains(platform))
+    //         return game;
 
-        Game? updatedGame = await this._gameService.Update(game.Id, game);
+    //     game.Platforms.Add(platform);
 
-        return updatedGame;
-    }
+    //     Game? updatedGame = await this._gameService.Update(game.Id, game);
 
-    public async Task<Game?> RemovePlatformToGame(Game game, Platform platform) {
-        if(!game.Platforms.Contains(platform))
-            return game;
+    //     return updatedGame;
+    // }
 
-        game.Platforms.Remove(platform);
+    // public async Task<Game?> RemovePlatformToGame(Game game, Platform platform) {
+    //     if(!game.Platforms.Contains(platform))
+    //         return game;
 
-        Game? updatedGame = await this._gameService.Update(game.Id, game);
+    //     game.Platforms.Remove(platform);
 
-        return updatedGame;
-    }
+    //     Game? updatedGame = await this._gameService.Update(game.Id, game);
+
+    //     return updatedGame;
+    // }
 
 }

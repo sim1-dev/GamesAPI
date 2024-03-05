@@ -9,7 +9,7 @@ class PlatformProfile : Profile {
         CreateMap<UpdatePlatformDto, Platform>();
         CreateMap<Platform, PlatformDto>();
         CreateMap<Platform, PlatformDetailDto>()
-            .ForMember(platformDetailDto => platformDetailDto.Games, opt => opt.MapFrom(platform => platform.Games))
+            .ForMember(platformDetailDto => platformDetailDto.GameDtos, opt => opt.MapFrom(platform => platform.Games))
         ;
     }
 }

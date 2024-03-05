@@ -4,6 +4,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using GamesAPI.Core.Models;
 using GamesAPI.Dtos;
+using GamesAPI.Services;
 
 namespace PlatformsAPI.Controllers;
 

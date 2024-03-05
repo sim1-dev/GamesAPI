@@ -2,6 +2,8 @@ using GamesAPI.Core.DataContexts;
 using GamesAPI.Core.Models;
 using Microsoft.EntityFrameworkCore;
 
+namespace GamesAPI.Services;
+
 public class PlatformService {
 
     private readonly BaseContext _db;

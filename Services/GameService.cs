@@ -2,6 +2,8 @@ using GamesAPI.Core.DataContexts;
 using GamesAPI.Core.Models;
 using Microsoft.EntityFrameworkCore;
 
+namespace GamesAPI.Services;
+
 public class GameService {
 
     private readonly BaseContext _db;
@@ -66,27 +68,4 @@ public class GameService {
 
         return game;
     }
-
-    public async Task<Game?> AddPlatform(Game game, Platform platform) {
-        if(game.Platforms.Contains(platform))
-            return game;
-
-        game.Platforms.Add(platform);
-
-        Game? updatedGame = await this.Update(game.Id, game);
-
-        return updatedGame;
-    }
-
-    public async Task<Game?> RemovePlatform(Game game, Platform platform) {
-        if(!game.Platforms.Contains(platform))
-            return game;
-
-        game.Platforms.Remove(platform);
-
-        Game? updatedGame = await this.Update(game.Id, game);
-
-        return updatedGame;
-    }
-
 }

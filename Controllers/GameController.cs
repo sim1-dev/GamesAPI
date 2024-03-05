@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using AutoMapper;
 using GamesAPI.Dtos;
 using Microsoft.AspNetCore.Authorization;
+using GamesAPI.Services;
 
 namespace GamesAPI.Controllers;
 
@@ -97,51 +98,5 @@ public class GameController : ControllerBase
             return NotFound();
 
         return Ok();
-    }
-
-    [Authorize(Policy = "IsGameDeveloper")]
-    [HttpPut("{id}/addPlatform")]
-    public async Task<ActionResult<GameDto>> AddPlatform(int id, [FromBody] int platformId) {
-        Game? game = await this._gameService.Find(id);
-
-        if(game is null)
-            return NotFound("Game not found");
-
-        Platform? platform = await this._platformService.Find(platformId);
-
-        if(platform is null)
-            return NotFound("Platform not found");
-
-        Game? updatedGame = await this._gameService.AddPlatform(game, platform);
-
-        if(updatedGame is null)
-            return StatusCode(500, "An error has occurred while updating. Please contact the system administrator");
-
-        GameDto updatedGameDto = _mapper.Map<GameDto>(updatedGame);
-
-        return updatedGameDto;
-    }
-
-    [Authorize(Policy = "IsGameDeveloper")]
-    [HttpPut("{id}/removePlatform")]
-    public async Task<ActionResult<GameDto>> RemovePlatform(int id, [FromBody] int platformId) {
-        Game? game = await this._gameService.Find(id);
-
-        if(game is null)
-            return NotFound("Game not found");
-
-        Platform? platform = await this._platformService.Find(platformId);
-
-        if(platform is null)
-            return NotFound("Platform not found");
-
-        Game? updatedGame = await this._gameService.RemovePlatform(game, platform);
-
-        if(updatedGame is null)
-            return StatusCode(500, "An error has occurred while updating. Please contact the system administrator");
-
-        GameDto updatedGameDto = _mapper.Map<GameDto>(updatedGame);
-
-        return updatedGameDto;
     }
 }

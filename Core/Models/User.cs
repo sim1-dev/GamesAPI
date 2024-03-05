@@ -12,6 +12,4 @@ public class User : IdentityUser<int> {
     public string? LastName { get; set; }
     public List<Developer>? DeveloperAccounts { get; set; }
     public List<Review>? Reviews;
-
-    //public List<Game>? OwnedGames { get; set; }
 }

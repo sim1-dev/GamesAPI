@@ -7,6 +7,7 @@ class GameProfile : Profile {
     public GameProfile() {
         CreateMap<CreateGameDto, Game>();
         CreateMap<UpdateGameDto, Game>();
+
         CreateMap<Game, GameDto>()
             .ForMember(gameDto => gameDto.SoftwareHouseDto, option => option.MapFrom(game => game.SoftwareHouse))
             .ForMember(gameDetailDto => gameDetailDto.CategoryDto, option => option.MapFrom(game => game.Category))
@@ -18,6 +19,7 @@ class GameProfile : Profile {
                 )
             )
         ;
+        
         CreateMap<Game, GameDetailDto>()
             .ForMember(gameDetailDto => gameDetailDto.SoftwareHouseDto, option => option.MapFrom(game => game.SoftwareHouse))
             .ForMember(gameDetailDto => gameDetailDto.CategoryDto, option => option.MapFrom(game => game.Category))

@@ -35,5 +35,4 @@ public class Game {
 
 
     public List<Review>? Reviews {get; set;}
-    // public List<User>? Buyers { get; set; }
 }

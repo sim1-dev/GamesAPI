@@ -10,6 +10,7 @@ public class GameDto {
     
     public required List<PlatformDto> PlatformDtos {get; set;}
     public required SoftwareHouseDto SoftwareHouseDto { get; set; }
+    public required CategoryDto CategoryDto { get; set; }
 
     public int? ReviewsAvgScore {get; set;}
 }

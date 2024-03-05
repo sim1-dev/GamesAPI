@@ -16,6 +16,7 @@ public class GameService {
         List<Game> games = await this._db.Games
             .Include(game => game.Platforms)
             .Include(game => game.SoftwareHouse)
+            .Include(game => game.Category)
             .Include(game => game.Reviews)  // TODO [perf] (non voglio caricare tutte le reviews per un'aggregazione)
         .ToListAsync();
 
@@ -26,6 +27,7 @@ public class GameService {
         Game? game = await this._db.Games
             .Include(game => game.Platforms)
             .Include(game => game.SoftwareHouse)
+            .Include(game => game.Category)
             .Include(game => game.Reviews!)
                 .ThenInclude(review => review.ReviewerUser)
         .FirstOrDefaultAsync(game => game.Id == id);

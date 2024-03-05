@@ -9,6 +9,7 @@ class GameProfile : Profile {
         CreateMap<UpdateGameDto, Game>();
         CreateMap<Game, GameDto>()
             .ForMember(gameDto => gameDto.SoftwareHouseDto, option => option.MapFrom(game => game.SoftwareHouse))
+            .ForMember(gameDetailDto => gameDetailDto.CategoryDto, option => option.MapFrom(game => game.Category))
             .ForMember(gameDto => gameDto.PlatformDtos, option => option.MapFrom(game => game.Platforms))
             .ForMember(gameDto => gameDto.ReviewsAvgScore, opt => opt.MapFrom(
                     game => game.Reviews != null && game.Reviews.Any() 
@@ -19,6 +20,7 @@ class GameProfile : Profile {
         ;
         CreateMap<Game, GameDetailDto>()
             .ForMember(gameDetailDto => gameDetailDto.SoftwareHouseDto, option => option.MapFrom(game => game.SoftwareHouse))
+            .ForMember(gameDetailDto => gameDetailDto.CategoryDto, option => option.MapFrom(game => game.Category))
             .ForMember(gameDetailDto => gameDetailDto.PlatformDtos, option => option.MapFrom(game => game.Platforms))
             .ForMember(gameDetailDto => gameDetailDto.ReviewDtos, option => option.MapFrom(game => game.Reviews))
         ;

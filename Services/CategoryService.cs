@@ -57,7 +57,7 @@ public class CategoryService : ICrudService<Category, CategoryDto, CreateCategor
         if(category is null)
             return null;
 
-        this._mapper.Map(updateCategoryDto, category);
+        this._db.Entry(category).CurrentValues.SetValues(updateCategoryDto);
 
         await this._db.SaveChangesAsync();
 

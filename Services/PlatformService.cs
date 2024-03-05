@@ -56,7 +56,7 @@ public class PlatformService : ICrudService<Platform, PlatformDto, CreatePlatfor
         if(platform is null)
             return null;
 
-        this._mapper.Map(updatePlatformDto, platform);
+        this._db.Entry(platform).CurrentValues.SetValues(updatePlatformDto);
 
         await this._db.SaveChangesAsync();
 

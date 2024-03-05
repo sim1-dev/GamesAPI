@@ -72,7 +72,7 @@ public class ReviewService : ICrudService<Review, ReviewDto, CreateReviewDto, Up
         if(review is null)
             return null;
 
-        this._mapper.Map(updateReviewDto, review);
+        this._db.Entry(review).CurrentValues.SetValues(updateReviewDto);
 
         await this._db.SaveChangesAsync();
 

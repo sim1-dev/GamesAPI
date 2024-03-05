@@ -64,7 +64,7 @@ public class GameService : ICrudService<Game, GameDto, CreateGameDto, UpdateGame
         if(game is null)
             return null;
 
-       this._mapper.Map(updateGameDto, game);
+        this._db.Entry(game).CurrentValues.SetValues(updateGameDto);
 
         await this._db.SaveChangesAsync();
 

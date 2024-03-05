@@ -1,12 +1,13 @@
 using AutoMapper;
 using GamesAPI.Core.DataContexts;
 using GamesAPI.Core.Models;
+using GamesAPI.Core.Services;
 using GamesAPI.Dtos;
 using Microsoft.EntityFrameworkCore;
 
 namespace GamesAPI.Services;
 
-public class GameService {
+public class GameService : ICrudService<Game, GameDto, CreateGameDto, UpdateGameDto> {
 
     private readonly BaseContext _db;
     private readonly PlatformService _platformService;
@@ -18,7 +19,7 @@ public class GameService {
        this._mapper = mapper;
     }
 
-    public async Task<List<Game>?> GetAll() {
+    public async Task<List<Game>> GetAll() {
         List<Game> games = await this._db.Games
             .Include(game => game.Platforms)
             .Include(game => game.SoftwareHouse)

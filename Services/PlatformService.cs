@@ -1,12 +1,13 @@
 using AutoMapper;
 using GamesAPI.Core.DataContexts;
 using GamesAPI.Core.Models;
+using GamesAPI.Core.Services;
 using GamesAPI.Dtos;
 using Microsoft.EntityFrameworkCore;
 
 namespace GamesAPI.Services;
 
-public class PlatformService {
+public class PlatformService : ICrudService<Platform, PlatformDto, CreatePlatformDto, UpdatePlatformDto> {
 
     private readonly BaseContext _db;
     private readonly IMapper _mapper;

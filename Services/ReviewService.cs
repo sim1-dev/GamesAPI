@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GamesAPI.Services;
 
-public class ReviewService {
+public class ReviewService : ICrudService<Review, ReviewDto, CreateReviewDto, UpdateReviewDto> {
 
     private readonly BaseContext _db;
     private readonly IMapper _mapper;
@@ -39,6 +39,16 @@ public class ReviewService {
 
     public async Task<Review?> FindByReviewerUserIdAndGameId(int reviewerUserId, int gameId) {
         Review? review = await _db.Reviews.FirstOrDefaultAsync(review => review.UserId == reviewerUserId && review.GameId == gameId);
+
+        return review;
+    }
+
+    public async Task<Review> Create(CreateReviewDto createReviewDto) {
+        Review review = _mapper.Map<Review>(createReviewDto);
+
+        this._db.Reviews.Add(review);
+
+        await _db.SaveChangesAsync();
 
         return review;
     }

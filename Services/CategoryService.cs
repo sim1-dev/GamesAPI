@@ -1,12 +1,13 @@
 using AutoMapper;
 using GamesAPI.Core.DataContexts;
 using GamesAPI.Core.Models;
+using GamesAPI.Core.Services;
 using GamesAPI.Dtos;
 using Microsoft.EntityFrameworkCore;
 
 namespace GamesAPI.Services;
 
-public class CategoryService {
+public class CategoryService : ICrudService<Category, CategoryDto, CreateCategoryDto, UpdateCategoryDto> {
 
     private readonly BaseContext _db;
 

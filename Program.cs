@@ -2,6 +2,8 @@ using System.Text.Json.Serialization;
 using GamesAPI.Core.DataContexts;
 using GamesAPI.Core.Middleware;
 using GamesAPI.Core.Models;
+using GamesAPI.Core.Services;
+using GamesAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -23,22 +25,30 @@ builder.Services.AddAuthentication(options =>
 builder.Services
 	.AddAuthorization(option => {
         option.AddPolicy("IsGameDeveloper", policy => policy.Requirements.Add(new IsGameDeveloperRequirement()));
+        option.AddPolicy("IsReviewerUser", policy => policy.Requirements.Add(new IsReviewerUserRequirement()));    
 	});
 
 builder.Services
 	.AddIdentityApiEndpoints<User>()
 	.AddRoles<Role>()
 	.AddEntityFrameworkStores<BaseContext>()
-	.AddDefaultTokenProviders();
+	.AddDefaultTokenProviders()
 ;
 
 builder.Services
     .AddSingleton<PasswordHasher<User>>();
 
+builder.Services.AddScoped(typeof(UserContextService));
+
 builder.Services
     .AddScoped<IAuthorizationHandler, IsGameDeveloperHandler>()
+    .AddScoped<IAuthorizationHandler, IsReviewerUserHandler>()
     .AddScoped(typeof(GameService))
-    .AddScoped(typeof(PlatformService));
+    .AddScoped(typeof(PlatformService))
+    .AddScoped(typeof(GamePlatformService))
+    .AddScoped(typeof(CategoryService))
+    .AddScoped(typeof(ReviewService))
+;
 
 builder.Services.AddAutoMapper(typeof(Program));
 

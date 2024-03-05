@@ -7,6 +7,7 @@ public class Review {
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
     public int GameId { get; set; }
+    public Game Game { get; set; } = null!;
 
     [Column("ReviewerUserId")]
     public int UserId { get; set; }

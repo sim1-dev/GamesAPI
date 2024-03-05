@@ -51,25 +51,22 @@ public class PlatformController : ControllerBase
     public async Task<ActionResult<PlatformDto>> Create(CreatePlatformDto createPlatformDto) {
         if(createPlatformDto is null)
             return BadRequest();
-            
-        Platform platform = _mapper.Map<Platform>(createPlatformDto);
 
-
-        Platform? existingPlatform = await this._platformService.FindByName(platform.Name);
+        Platform? existingPlatform = await this._platformService.FindByName(createPlatformDto.Name);
 
         if(existingPlatform is not null)
             return StatusCode(409, "Platform already exists");
 
 
-        Platform? createdPlatform = await this._platformService.Create(platform);
+        Platform? platform = await this._platformService.Create(createPlatformDto);
 
-        if(createdPlatform is null)
+        if(platform is null)
             return StatusCode(500, "An error has occurred while creating. Please contact the system administrator");  
 
             
-        PlatformDto createdPlatformDto = _mapper.Map<PlatformDto>(createdPlatform);
+        PlatformDto platformDto = _mapper.Map<PlatformDto>(platform);
 
-        return createdPlatformDto;
+        return platformDto;
     }
 
 
@@ -79,16 +76,14 @@ public class PlatformController : ControllerBase
         if(updatePlatformDto is null)
             return BadRequest();
 
-        Platform platform = _mapper.Map<Platform>(updatePlatformDto);
+        Platform? platform = await this._platformService.Update(id, updatePlatformDto);
 
-        Platform? updatedPlatform = await this._platformService.Update(id, platform);
-
-        if(updatedPlatform is null)
+        if(platform is null)
             return StatusCode(500, "An error has occurred while updating. Please contact the system administrator");      
 
-        PlatformDto updatedPlatformDto = _mapper.Map<PlatformDto>(updatedPlatform);
+        PlatformDto platformDto = _mapper.Map<PlatformDto>(platform);
 
-        return updatedPlatformDto;
+        return platformDto;
     }
 
     [Authorize(Roles = "Admin")]

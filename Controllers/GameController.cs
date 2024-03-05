@@ -54,20 +54,11 @@ public class GameController : ControllerBase
         if(createGameDto is null)
             return BadRequest();
 
-        Game game = _mapper.Map<Game>(createGameDto);
-
-        // https://learn.microsoft.com/it-it/dotnet/fundamentals/code-analysis/quality-rules/ca1860
-        if(createGameDto.PlatformIds!.Count != 0)
-            game.Platforms = await this._platformService.FindByIds(createGameDto.PlatformIds!);
-
-        Game? createdGame = await this._gameService.Create(game);
-
-        if(createdGame is null)
-            return StatusCode(500, "An error has occurred while creating. Please contact the system administrator");     
+        Game game = await this._gameService.Create(createGameDto);  
             
-        GameDto createdGameDto = _mapper.Map<GameDto>(createdGame);
+        GameDto gameDto = _mapper.Map<GameDto>(game);
 
-        return createdGameDto;
+        return gameDto;
     }
 
     [Authorize(Policy = "IsGameDeveloper")]
@@ -76,16 +67,14 @@ public class GameController : ControllerBase
         if(updateGameDto is null)
             return BadRequest();
 
-        Game game = _mapper.Map<Game>(updateGameDto);
+        Game? game = await this._gameService.Update(id, updateGameDto);
 
-        Game? updatedGame = await this._gameService.Update(id, game);
-
-        if(updatedGame is null)
+        if(game is null)
             return StatusCode(500, "An error has occurred while updating. Please contact the system administrator");      
 
-        GameDto updatedGameDto = _mapper.Map<GameDto>(updatedGame);
+        GameDto gameDto = _mapper.Map<GameDto>(game);
 
-        return updatedGameDto;
+        return gameDto;
     }
 
     [HttpDelete("{id}")]

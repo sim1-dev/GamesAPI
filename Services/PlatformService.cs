@@ -1,5 +1,7 @@
+using AutoMapper;
 using GamesAPI.Core.DataContexts;
 using GamesAPI.Core.Models;
+using GamesAPI.Dtos;
 using Microsoft.EntityFrameworkCore;
 
 namespace GamesAPI.Services;
@@ -7,9 +9,11 @@ namespace GamesAPI.Services;
 public class PlatformService {
 
     private readonly BaseContext _db;
+    private readonly IMapper _mapper;
 
-    public PlatformService(BaseContext db) {
+    public PlatformService(BaseContext db, IMapper mapper) {
        this._db = db;
+       this._mapper = mapper;
     }
 
     public async Task<List<Platform>> GetAll() {
@@ -34,25 +38,28 @@ public class PlatformService {
         return await _db.Platforms.Where(platform => ids.Contains(platform.Id)).ToListAsync();
     }
 
-    public async Task<Platform> Create(Platform platform) {
-        _db.Platforms.Add(platform);
+    public async Task<Platform> Create(CreatePlatformDto createPlatformDto) {
+        Platform platform = this._mapper.Map<Platform>(createPlatformDto);
+
+        this._db.Platforms.Add(platform);
+
         await _db.SaveChangesAsync();
 
         return platform;
     }
 
-    public async Task<Platform?> Update(int id, Platform platform) {
+    public async Task<Platform?> Update(int id, UpdatePlatformDto updatePlatformDto) {
 
-        Platform? existingPlatform = await this.Find(id);
+        Platform? platform = await this.Find(id);
 
-        if(existingPlatform is null)
+        if(platform is null)
             return null;
 
-        this._db.Entry(existingPlatform).CurrentValues.SetValues(platform);
+        this._mapper.Map(updatePlatformDto, platform);
 
         await this._db.SaveChangesAsync();
 
-        return existingPlatform;
+        return platform;
     }
 
     public async Task<Platform?> Delete(int id) {

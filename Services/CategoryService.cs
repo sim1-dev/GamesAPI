@@ -1,5 +1,7 @@
+using AutoMapper;
 using GamesAPI.Core.DataContexts;
 using GamesAPI.Core.Models;
+using GamesAPI.Dtos;
 using Microsoft.EntityFrameworkCore;
 
 namespace GamesAPI.Services;
@@ -8,8 +10,11 @@ public class CategoryService {
 
     private readonly BaseContext _db;
 
-    public CategoryService(BaseContext db) {
+    private readonly IMapper _mapper;
+
+    public CategoryService(BaseContext db, IMapper mapper) {
        this._db = db;
+       this._mapper = mapper;
     }
 
     public async Task<List<Category>> GetAll() {
@@ -34,25 +39,28 @@ public class CategoryService {
         return await _db.Categories.Where(category => ids.Contains(category.Id)).ToListAsync();
     }
 
-    public async Task<Category> Create(Category category) {
-        _db.Categories.Add(category);
+    public async Task<Category> Create(CreateCategoryDto createCategoryDto) {
+        Category category = this._mapper.Map<Category>(createCategoryDto);
+
+        this._db.Categories.Add(category);
+
         await _db.SaveChangesAsync();
 
         return category;
     }
 
-    public async Task<Category?> Update(int id, Category category) {
+    public async Task<Category?> Update(int id, UpdateCategoryDto updateCategoryDto) {
 
-        Category? existingCategory = await this.Find(id);
+        Category? category = await this.Find(id);
 
-        if(existingCategory is null)
+        if(category is null)
             return null;
 
-        this._db.Entry(existingCategory).CurrentValues.SetValues(category);
+        this._mapper.Map(updateCategoryDto, category);
 
         await this._db.SaveChangesAsync();
 
-        return existingCategory;
+        return category;
     }
 
     public async Task<Category?> Delete(int id) {

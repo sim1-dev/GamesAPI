@@ -1,5 +1,7 @@
+using AutoMapper;
 using GamesAPI.Core.DataContexts;
 using GamesAPI.Core.Models;
+using GamesAPI.Dtos;
 using Microsoft.EntityFrameworkCore;
 
 namespace GamesAPI.Services;
@@ -7,9 +9,13 @@ namespace GamesAPI.Services;
 public class GameService {
 
     private readonly BaseContext _db;
+    private readonly PlatformService _platformService;
+    private readonly IMapper _mapper;
 
-    public GameService(BaseContext db) {
+    public GameService(BaseContext db, PlatformService platformService, IMapper mapper) {
        this._db = db;
+       this._platformService = platformService;
+       this._mapper = mapper;
     }
 
     public async Task<List<Game>?> GetAll() {
@@ -35,7 +41,13 @@ public class GameService {
         return game;
     }
 
-    public async Task<Game?> Create(Game game) {
+    public async Task<Game> Create(CreateGameDto createGameDto) {
+
+        Game game = this._mapper.Map<Game>(createGameDto);
+
+        // https://learn.microsoft.com/it-it/dotnet/fundamentals/code-analysis/quality-rules/ca1860
+        if(createGameDto.PlatformIds!.Count != 0)
+            game.Platforms = await this._platformService.FindByIds(createGameDto.PlatformIds!);
 
         this._db.Games.Add(game);
 
@@ -44,18 +56,18 @@ public class GameService {
         return game;
     }
 
-    public async Task<Game?> Update(int id, Game game) {
+    public async Task<Game?> Update(int id, UpdateGameDto updateGameDto) {
 
-        Game? existingGame = await this.Find(id);
+        Game? game = await this.Find(id);
 
-        if(existingGame is null)
+        if(game is null)
             return null;
 
-        this._db.Entry(existingGame).CurrentValues.SetValues(game);
+       this._mapper.Map(updateGameDto, game);
 
         await this._db.SaveChangesAsync();
 
-        return existingGame;
+        return game;
     }
 
     public async Task<Game?> Delete(int id) {

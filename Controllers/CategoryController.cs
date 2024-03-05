@@ -51,25 +51,23 @@ public class CategoryController : ControllerBase
     public async Task<ActionResult<CategoryDto>> Create(CreateCategoryDto createCategoryDto) {
         if(createCategoryDto is null)
             return BadRequest();
-            
-        Category category = _mapper.Map<Category>(createCategoryDto);
 
 
-        Category? existingCategory = await this._categoryService.FindByName(category.Name);
+        Category? existingCategory = await this._categoryService.FindByName(createCategoryDto.Name);
 
         if(existingCategory is not null)
             return StatusCode(409, "Category already exists");
 
 
-        Category? createdCategory = await this._categoryService.Create(category);
+        Category? category = await this._categoryService.Create(createCategoryDto);
 
-        if(createdCategory is null)
+        if(category is null)
             return StatusCode(500, "An error has occurred while creating. Please contact the system administrator");  
 
             
-        CategoryDto createdCategoryDto = _mapper.Map<CategoryDto>(createdCategory);
+        CategoryDto categoryDto = _mapper.Map<CategoryDto>(category);
 
-        return createdCategoryDto;
+        return categoryDto;
     }
 
 
@@ -79,16 +77,14 @@ public class CategoryController : ControllerBase
         if(updateCategoryDto is null)
             return BadRequest();
 
-        Category category = _mapper.Map<Category>(updateCategoryDto);
+        Category? category = await this._categoryService.Update(id, updateCategoryDto);
 
-        Category? updatedCategory = await this._categoryService.Update(id, category);
-
-        if(updatedCategory is null)
+        if(category is null)
             return StatusCode(500, "An error has occurred while updating. Please contact the system administrator");      
 
-        CategoryDto updatedCategoryDto = _mapper.Map<CategoryDto>(updatedCategory);
+        CategoryDto categoryDto = _mapper.Map<CategoryDto>(category);
 
-        return updatedCategoryDto;
+        return categoryDto;
     }
 
     [Authorize(Roles = "Admin")]

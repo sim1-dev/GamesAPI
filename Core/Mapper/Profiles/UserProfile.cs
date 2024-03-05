@@ -8,5 +8,8 @@ class UserProfile : Profile {
         // CreateMap<CreateUserDto, User>();
         // CreateMap<UpdateUserDto, User>();
         CreateMap<User, UserDto>();
+        CreateMap<User, UserDetailDto>()
+            .ForMember(userDetailDto => userDetailDto.DeveloperDtos, opt => opt.MapFrom(user => user.DeveloperAccounts))
+        ;
     }
 }

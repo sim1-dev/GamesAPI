@@ -52,11 +52,10 @@ public class CategoryController : ControllerBase
         if(createCategoryDto is null)
             return BadRequest();
 
-
         Category? existingCategory = await this._categoryService.FindByName(createCategoryDto.Name);
 
         if(existingCategory is not null)
-            return StatusCode(409, "Category already exists");
+            return Conflict("Category already exists");
 
 
         Category? category = await this._categoryService.Create(createCategoryDto);

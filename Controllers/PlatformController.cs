@@ -55,7 +55,7 @@ public class PlatformController : ControllerBase
         Platform? existingPlatform = await this._platformService.FindByName(createPlatformDto.Name);
 
         if(existingPlatform is not null)
-            return StatusCode(409, "Platform already exists");
+            return Conflict("Platform already exists");
 
 
         Platform? platform = await this._platformService.Create(createPlatformDto);

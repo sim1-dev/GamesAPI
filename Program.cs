@@ -48,6 +48,7 @@ builder.Services
     .AddScoped(typeof(GamePlatformService))
     .AddScoped(typeof(CategoryService))
     .AddScoped(typeof(ReviewService))
+    .AddScoped(typeof(SoftwareHouseService))
 ;
 
 builder.Services.AddAutoMapper(typeof(Program));

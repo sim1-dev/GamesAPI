@@ -5,8 +5,8 @@ using GamesAPI.Dtos;
 namespace GamesAPI.Utilities;
 class SoftwareHouseProfile : Profile {
     public SoftwareHouseProfile() {
-        // CreateMap<CreateSoftwareHouseDto, SoftwareHouse>();
-        // CreateMap<UpdateSoftwareHouseDto, SoftwareHouse>();
+        CreateMap<CreateSoftwareHouseDto, SoftwareHouse>();
+        CreateMap<UpdateSoftwareHouseDto, SoftwareHouse>();
         CreateMap<SoftwareHouse, SoftwareHouseDto>();
         
         CreateMap<SoftwareHouse, SoftwareHouseDetailDto>()

@@ -1,4 +1,4 @@
-using GamesAPI.Core.Models;
+using GamesAPI.Models;
 using GamesAPI.Core.Services;
 using GamesAPI.Dtos;
 

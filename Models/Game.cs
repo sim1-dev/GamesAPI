@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace GamesAPI.Core.Models;
+namespace GamesAPI.Models;
 public class Game {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

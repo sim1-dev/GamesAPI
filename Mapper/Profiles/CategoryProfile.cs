@@ -1,8 +1,8 @@
 using AutoMapper;
-using GamesAPI.Core.Models;
+using GamesAPI.Models;
 using GamesAPI.Dtos;
 
-namespace GamesAPI.Utilities;
+namespace GamesAPI.Profiles;
 class CategoryProfile : Profile {
     public CategoryProfile() {
         CreateMap<CreateCategoryDto, Category>();

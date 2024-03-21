@@ -1,5 +1,5 @@
 using GamesAPI.Core.DataContexts;
-using GamesAPI.Core.Models;
+using GamesAPI.Models;
 
 namespace GamesAPI.Services;
 

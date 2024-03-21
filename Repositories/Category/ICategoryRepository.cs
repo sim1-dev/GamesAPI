@@ -1,6 +1,6 @@
-using GamesAPI.Core.Models;
+using GamesAPI.Models;
 
-namespace GamesAPI.Core.Repositories;
+namespace GamesAPI.Repositories;
 
 public interface ICategoryRepository : IRepository<Category> {
     public Task<Category?> FindByName(string name);

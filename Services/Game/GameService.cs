@@ -1,7 +1,7 @@
 using AutoMapper;
 using GamesAPI.Core.DataContexts;
-using GamesAPI.Core.Models;
 using GamesAPI.Core.Services;
+using GamesAPI.Models;
 using GamesAPI.Dtos;
 using Microsoft.EntityFrameworkCore;
 

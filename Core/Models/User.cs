@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations.Schema;
+using GamesAPI.Models;
 using Microsoft.AspNetCore.Identity;
 
 namespace GamesAPI.Core.Models;

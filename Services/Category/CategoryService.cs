@@ -1,6 +1,6 @@
 using AutoMapper;
-using GamesAPI.Core.Models;
-using GamesAPI.Core.Repositories;
+using GamesAPI.Models;
+using GamesAPI.Repositories;
 using GamesAPI.Dtos;
 
 namespace GamesAPI.Services;

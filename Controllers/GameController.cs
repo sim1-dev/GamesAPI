@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
-using GamesAPI.Core.Models;
 using System.Collections.ObjectModel;
 using AutoMapper;
 using GamesAPI.Dtos;
 using Microsoft.AspNetCore.Authorization;
 using GamesAPI.Services;
+using GamesAPI.Models;
 
 namespace GamesAPI.Controllers;
 
@@ -14,12 +14,10 @@ public class GameController : ControllerBase
 {
     private readonly IMapper _mapper;
     private readonly GameService _gameService;
-    private readonly PlatformService _platformService;
 
-    public GameController(IMapper mapper, GameService gameService, PlatformService platformService) {
+    public GameController(IMapper mapper, GameService gameService) {
         this._mapper = mapper;
         this._gameService = gameService;
-        this._platformService = platformService;
     }
     
     [AllowAnonymous]

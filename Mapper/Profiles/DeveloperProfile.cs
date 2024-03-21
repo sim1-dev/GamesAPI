@@ -1,8 +1,8 @@
 using AutoMapper;
-using GamesAPI.Core.Models;
+using GamesAPI.Models;
 using GamesAPI.Dtos;
 
-namespace GamesAPI.Utilities;
+namespace GamesAPI.Profiles;
 class DeveloperProfile : Profile {
     public DeveloperProfile() {
         // CreateMap<CreatePlatformDto, Platform>();

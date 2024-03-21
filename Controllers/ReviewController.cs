@@ -2,10 +2,10 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.ObjectModel;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
-using GamesAPI.Core.Models;
 using GamesAPI.Dtos;
 using GamesAPI.Services;
 using GamesAPI.Core.Services;
+using GamesAPI.Models;
 
 namespace GamesAPI.Controllers;
 

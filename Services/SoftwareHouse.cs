@@ -1,6 +1,6 @@
 using AutoMapper;
 using GamesAPI.Core.DataContexts;
-using GamesAPI.Core.Models;
+using GamesAPI.Models;
 using GamesAPI.Core.Services;
 using GamesAPI.Dtos;
 using Microsoft.EntityFrameworkCore;
@@ -13,8 +13,8 @@ public class SoftwareHouseService : ICrudService<SoftwareHouse, SoftwareHouseDto
     private readonly IMapper _mapper;
 
     public SoftwareHouseService(BaseContext db, IMapper mapper) {
-       this._db = db;
-       this._mapper = mapper;
+        this._db = db;
+        this._mapper = mapper;
     }
 
     public async Task<List<SoftwareHouse>> GetAll() {

@@ -1,10 +1,9 @@
 using System.Text.Json.Serialization;
 using GamesAPI.Core.DataContexts;
-using GamesAPI.Core.Middleware;
+using GamesAPI.Middleware;
 using GamesAPI.Core.Models;
-using GamesAPI.Core.Repositories;
-using GamesAPI.Core.Services;
 using GamesAPI.Repositories;
+using GamesAPI.Core.Services;
 using GamesAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;

@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using GamesAPI.Dtos;
-using GamesAPI.Core.Models;
+using GamesAPI.Models;
 using AutoMapper;
 
 namespace GamesAPI.Controllers;

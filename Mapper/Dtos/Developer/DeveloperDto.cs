@@ -1,3 +1,5 @@
+using GamesAPI.Core.Dtos;
+
 namespace GamesAPI.Dtos;
 
 public class DeveloperDto {

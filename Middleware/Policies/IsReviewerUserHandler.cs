@@ -7,10 +7,11 @@
 using System.Security.Claims;
 using GamesAPI.Core.DataContexts;
 using GamesAPI.Core.Models;
+using GamesAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
-namespace GamesAPI.Core.Middleware;
+namespace GamesAPI.Middleware;
 
 public class IsReviewerUserRequirement : IAuthorizationRequirement {
     public IsReviewerUserRequirement() {

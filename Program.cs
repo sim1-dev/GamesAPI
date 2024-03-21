@@ -13,15 +13,17 @@ using Microsoft.OpenApi.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("BaseContext");
+string? connectionString = builder.Configuration.GetConnectionString("BaseContext");
 
 builder.Services.AddDbContext<BaseContext>(option => option.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = IdentityConstants.BearerScheme;
-    options.DefaultChallengeScheme = IdentityConstants.BearerScheme;
-}).AddBearerToken();
+builder.Services
+    .AddAuthentication(options => {
+        options.DefaultAuthenticateScheme = IdentityConstants.BearerScheme;
+        options.DefaultChallengeScheme = IdentityConstants.BearerScheme;
+    })
+    .AddBearerToken()
+;
 
 builder.Services
 	.AddAuthorization(option => {
@@ -37,26 +39,38 @@ builder.Services
 ;
 
 builder.Services
-    .AddSingleton<PasswordHasher<User>>();
+    .AddSingleton<PasswordHasher<User>>()
+;
 
-builder.Services.AddScoped(typeof(UserContextService));
+builder.Services
+    .AddScoped(typeof(UserContextService))
+;
 
 builder.Services
     .AddScoped<IAuthorizationHandler, IsGameDeveloperHandler>()
     .AddScoped<IAuthorizationHandler, IsReviewerUserHandler>()
-    .AddScoped(typeof(GameService))
+;
+
+builder.Services
     .AddScoped(typeof(PlatformService))
-    .AddScoped(typeof(GamePlatformService))
     .AddScoped<ICategoryService, CategoryService>()
+    .AddScoped<IGameService, GameService>()
     .AddScoped(typeof(ReviewService))
     .AddScoped(typeof(SoftwareHouseService))
+    //.AddScoped(typeof(GamePlatformService))
 ;
+
 builder.Services
-    .AddScoped<ICategoryRepository, CategoryRepository>();
+    .AddScoped<ICategoryRepository, CategoryRepository>()
+    .AddScoped<IGameRepository, GameRepository>()
+;
 
 builder.Services.AddAutoMapper(typeof(Program));
 
-builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+builder.Services
+    .AddControllers()
+    .AddJsonOptions(options => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles)
+;
 
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 

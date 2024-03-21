@@ -1,86 +1,65 @@
 using AutoMapper;
-using GamesAPI.Core.DataContexts;
-using GamesAPI.Core.Services;
 using GamesAPI.Models;
 using GamesAPI.Dtos;
-using Microsoft.EntityFrameworkCore;
+using GamesAPI.Repositories;
 
 namespace GamesAPI.Services;
 
-public class GameService : ICrudService<Game, GameDto, CreateGameDto, UpdateGameDto> {
-
-    private readonly BaseContext _db;
-    private readonly PlatformService _platformService;
+public class GameService : IGameService {
+    private readonly IGameRepository _gameRepository;
     private readonly IMapper _mapper;
 
-    public GameService(BaseContext db, PlatformService platformService, IMapper mapper) {
-       this._db = db;
-       this._platformService = platformService;
-       this._mapper = mapper;
+    public GameService(IGameRepository gameRepository, IMapper mapper) {
+        this._gameRepository = gameRepository;
+        this._mapper = mapper;
     }
 
-    public async Task<List<Game>> GetAll() {
-        List<Game> games = await this._db.Games
-            .Include(game => game.Platforms)
-            .Include(game => game.SoftwareHouse)
-            .Include(game => game.Category)
-            .Include(game => game.Reviews)  // TODO [perf] (non voglio caricare tutte le reviews per un'aggregazione)
-        .ToListAsync();
+    public async Task<IEnumerable<Game>> GetAll() {
+        IEnumerable<Game> games = await this._gameRepository.GetAll();
 
         return games;
     }
 
     public async Task<Game?> Find(int id) {
-        Game? game = await this._db.Games
-            .Include(game => game.Platforms)
-            .Include(game => game.SoftwareHouse)
-            .Include(game => game.Category)
-            .Include(game => game.Reviews!)
-                .ThenInclude(review => review.ReviewerUser)
-        .FirstOrDefaultAsync(game => game.Id == id);
+        Game? game = await this._gameRepository.Find(id);
         
         return game;
     }
 
     public async Task<Game> Create(CreateGameDto createGameDto) {
-
         Game game = this._mapper.Map<Game>(createGameDto);
 
-        // https://learn.microsoft.com/it-it/dotnet/fundamentals/code-analysis/quality-rules/ca1860
-        if(createGameDto.PlatformIds!.Count != 0)
-            game.Platforms = await this._platformService.FindByIds(createGameDto.PlatformIds!);
+        // TODO reimplement
+        // // https://learn.microsoft.com/it-it/dotnet/fundamentals/code-analysis/quality-rules/ca1860
+        // if(createGameDto.PlatformIds!.Count != 0)
+        //     game.Platforms = await this._platformService.FindByIds(createGameDto.PlatformIds!);
 
-        this._db.Games.Add(game);
-
-        await this._db.SaveChangesAsync();
+        await this._gameRepository.Create(game);
 
         return game;
     }
 
     public async Task<Game?> Update(int id, UpdateGameDto updateGameDto) {
-
-        Game? game = await this.Find(id);
+        Game? game = await this._gameRepository.Find(id);
 
         if(game is null)
             return null;
 
-        this._db.Entry(game).CurrentValues.SetValues(updateGameDto);
+        // TODO debug: sovrascrive i campi mancanti con NULL
+        Game updatedGame = _mapper.Map(updateGameDto, game);
 
-        await this._db.SaveChangesAsync();
+        await this._gameRepository.Update(updatedGame);
 
         return game;
     }
-
-    public async Task<Game?> Delete(int id) {
-        Game? game = await this.Find(id);
+    public async Task<bool> Delete(int id) {
+        Game? game = await this._gameRepository.Find(id);
 
         if(game is null)
-            return null;
+            return false;
 
-        this._db.Games.Remove(game);
+        await this._gameRepository.Delete(game);
 
-        await this._db.SaveChangesAsync();
-
-        return game;
+        return true;
     }
 }

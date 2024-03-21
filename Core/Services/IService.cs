@@ -1,11 +1,9 @@
 namespace GamesAPI.Core.Services;
 
-// TODO deprecate in favor of IService
-
-public interface ICrudService<T, TDto, TCreateDto, TUpdateDto> {
-    public Task<List<T>> GetAll();
+public interface IService<T, TCreateDto, TUpdateDto> {
+    public Task<IEnumerable<T>> GetAll();
     public Task<T?> Find(int id);
     public Task<T> Create(TCreateDto TPlatformDto);
     public Task<T?> Update(int id, TUpdateDto updateDto);
-    public Task<T?> Delete(int id);
+    public Task<bool> Delete(int id);
 }

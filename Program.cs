@@ -2,7 +2,9 @@ using System.Text.Json.Serialization;
 using GamesAPI.Core.DataContexts;
 using GamesAPI.Core.Middleware;
 using GamesAPI.Core.Models;
+using GamesAPI.Core.Repositories;
 using GamesAPI.Core.Services;
+using GamesAPI.Repositories;
 using GamesAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -46,10 +48,12 @@ builder.Services
     .AddScoped(typeof(GameService))
     .AddScoped(typeof(PlatformService))
     .AddScoped(typeof(GamePlatformService))
-    .AddScoped(typeof(CategoryService))
+    .AddScoped<ICategoryService, CategoryService>()
     .AddScoped(typeof(ReviewService))
     .AddScoped(typeof(SoftwareHouseService))
 ;
+builder.Services
+    .AddScoped<ICategoryRepository, CategoryRepository>();
 
 builder.Services.AddAutoMapper(typeof(Program));
 

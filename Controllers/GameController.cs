@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
-using GamesAPI.Core.Models;
 using System.Collections.ObjectModel;
 using AutoMapper;
 using GamesAPI.Dtos;
+using Microsoft.AspNetCore.Authorization;
+using GamesAPI.Services;
+using GamesAPI.Models;
 
 namespace GamesAPI.Controllers;
 
@@ -11,17 +13,17 @@ namespace GamesAPI.Controllers;
 public class GameController : ControllerBase
 {
     private readonly IMapper _mapper;
+    private readonly IGameService _gameService;
 
-    private readonly GameService _gameService;
-
-    public GameController(IMapper mapper, GameService gameService) {
-        this._mapper = mapper;
+    public GameController(IGameService gameService, IMapper mapper) {
         this._gameService = gameService;
+        this._mapper = mapper;
     }
-
+    
+    [AllowAnonymous]
 	[HttpGet]
     public async Task<ActionResult<Collection<GameDto>>> Get() {
-        List<Game>? games = await this._gameService.GetAll();
+        List<Game>? games = (await this._gameService.GetAll()).ToList();
 
         if(games is null)
             return NotFound();
@@ -31,6 +33,7 @@ public class GameController : ControllerBase
         return Ok(gameDtos);
     }
 
+    [AllowAnonymous]
     [HttpGet("{id}")]
     public async Task<ActionResult<GameDetailDto>> Find(int id) {
         Game? game = await this._gameService.Find(id);
@@ -43,43 +46,41 @@ public class GameController : ControllerBase
         return Ok(gameDetailDto);
     }
 
+    [Authorize]
     [HttpPost]
-    public async Task<ActionResult<GameDto>> Create(GameDto gameDto) {
-        if(gameDto is null)
+    public async Task<ActionResult<GameDto>> Create(CreateGameDto createGameDto) {
+        if(createGameDto is null)
             return BadRequest();
 
-        Game game = _mapper.Map<Game>(gameDto);
+        Game game = await this._gameService.Create(createGameDto);  
+            
+        GameDto gameDto = _mapper.Map<GameDto>(game);
 
-        Game createdGame = await this._gameService.Create(game);
-
-        GameDto createdGameDto = _mapper.Map<GameDto>(createdGame);
-
-        return createdGameDto;
+        return gameDto;
     }
 
+    [Authorize(Policy = "IsGameDeveloper")]
     [HttpPut("{id}")]
-    public async Task<ActionResult<GameDto>> Update(int id, [FromBody] GameDto gameDto) {
-        if(gameDto is null)
+    public async Task<ActionResult<GameDto>> Update(int id, [FromBody] UpdateGameDto updateGameDto) {
+        if(updateGameDto is null)
             return BadRequest();
 
-        Game game = _mapper.Map<Game>(gameDto);
+        Game? game = await this._gameService.Update(id, updateGameDto);
 
-        Game? updatedGame = await this._gameService.Update(id, game);
+        if(game is null)
+            return StatusCode(500, "An error has occurred while updating. Please contact the system administrator");      
 
-        if(updatedGame is null)
-            return NotFound();        
+        GameDto gameDto = _mapper.Map<GameDto>(game);
 
-        GameDto updatedGameDto = _mapper.Map<GameDto>(updatedGame);
-
-        return updatedGameDto;
+        return gameDto;
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Policy = "IsGameDeveloper")]
     public async Task<ActionResult<GameDto>> Delete(int id) {
-            
-        Game? game = await this._gameService.Delete(id);
+        bool isDeleted = await this._gameService.Delete(id);
 
-        if(game is null)
+        if(!isDeleted)
             return NotFound();
 
         return Ok();

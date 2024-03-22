@@ -1,20 +1,22 @@
 using Microsoft.EntityFrameworkCore;
-using GamesAPI.Core.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using GamesAPI.Core.Models;
+using GamesAPI.Models;
 
 namespace GamesAPI.Core.DataContexts;
 
-public class BaseContext : IdentityDbContext<User, IdentityRole<int>, int> {
-    public BaseContext() {
-    }
+public class BaseContext : IdentityDbContext<User, Role, int> {
 
-    public BaseContext(DbContextOptions<BaseContext> options) : base(options){
+    private readonly PasswordHasher<User> _passwordHasher;
+
+    public BaseContext(DbContextOptions<BaseContext> options, PasswordHasher<User> passwordHasher) : base(options){
+        this._passwordHasher = passwordHasher;
     }
 
     // Authorization
     public new DbSet<User> Users {get; set;}
-    public new DbSet<IdentityRole<int>> Roles {get; set;}
+    public new DbSet<Role> Roles {get; set;}
 
     // Discriminators
     public DbSet<Platform> Platforms {get; set;}
@@ -31,19 +33,15 @@ public class BaseContext : IdentityDbContext<User, IdentityRole<int>, int> {
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<Game>()
-            .HasMany(game => game.Platforms)
-            .WithMany(platform => platform.Games)
-            .UsingEntity(join => join.ToTable("games_platforms"))
-            .HasKey("id");
-
         seed(modelBuilder);
     }
 
     private void seed(ModelBuilder modelBuilder) {
 
-        seedRoles(modelBuilder);
         seedUsers(modelBuilder);
+        seedRoles(modelBuilder);
+
+        seedUserRoles(modelBuilder);
 
         seedSoftwareHouses(modelBuilder);
         seedDevelopers(modelBuilder);
@@ -53,58 +51,68 @@ public class BaseContext : IdentityDbContext<User, IdentityRole<int>, int> {
 
         seedGames(modelBuilder);
 
-        seedGamesPlatforms(modelBuilder);
+        seedGamePlatforms(modelBuilder);
 
         seedReviews(modelBuilder);
     }
 
-    private void seedRoles(ModelBuilder modelBuilder) {
-        modelBuilder.Entity<IdentityRole<int>>().HasData(
-            new IdentityRole<int> { Id = 1, Name = "Admin", NormalizedName = "ADMIN" },
-            new IdentityRole<int> { Id = 2, Name = "User", NormalizedName = "USER" }
-        );
-    }
-
     private void seedUsers(ModelBuilder modelBuilder) {
-        PasswordHasher<User> passwordHasher = new PasswordHasher<User>(); // TODO? inject?
-
-        User admin = new User { 
-            Id = 1, 
-            UserName = "admin", 
-            NormalizedUserName = "ADMIN", 
-            Email = "admin@admin.com", 
-            NormalizedEmail = "ADMIN@ADMIN.COM", 
-            EmailConfirmed = true,
-        };
-        admin.PasswordHash = passwordHasher.HashPassword(admin, "admin");
-
-        User user = new User { 
-            Id = 2, 
-            UserName = "and_rea", 
-            NormalizedUserName = "AND_REA", 
-            Email = "and.rea@test.com", 
-            NormalizedEmail = "AND.REA@TEST.COM", 
-            EmailConfirmed = true,
-        };
-        user.PasswordHash = passwordHasher.HashPassword(user, "and_rea");
-
-        User johnSmith = new User { 
-            Id = 3, 
-            UserName = "johnSmith15", 
-            NormalizedUserName = "JOHNSMITH15", 
-            Email = "john.smith@test.com", 
-            NormalizedEmail = "JOHN.SMITH@TEST.COM", 
-            EmailConfirmed = true,
-        };
-        johnSmith.PasswordHash = passwordHasher.HashPassword(johnSmith, "johnSmith");
 
         modelBuilder.Entity<User>().HasData(
-            admin, 
-            user, 
-            johnSmith
+            new User { 
+                Id = 1, 
+                FirstName = "Admin",
+                LastName = "Admin",
+                UserName = "admin@rockstargames.com", 
+                NormalizedUserName = "ADMIN@ROCKSTARGAMES.COM", 
+                Email = "admin@rockstargames.com", 
+                NormalizedEmail = "ADMIN@ROCKSTARGAMES.COM", 
+                EmailConfirmed = true,
+                PasswordHash = this._passwordHasher.HashPassword(null!, "Password1!"),
+                SecurityStamp = Guid.NewGuid().ToString()
+            },
+            new User { 
+                Id = 2, 
+                FirstName = "Andrea",
+                LastName = "Test",
+                UserName = "and.rea@rockstargames.com", 
+                NormalizedUserName = "AND.REA@ROCKSTARGAMES.COM", 
+                Email = "and.rea@rockstargames.com", 
+                NormalizedEmail = "AND.REA@ROCKSTARGAMES.COM", 
+                EmailConfirmed = true,
+                PasswordHash = this._passwordHasher.HashPassword(null!, "Password1!"),
+                SecurityStamp = Guid.NewGuid().ToString()
+            },
+            new User { 
+                Id = 3, 
+                FirstName = "John",
+                LastName = "Smith",
+                UserName = "john.smith@ubisoft.com", 
+                NormalizedUserName = "JOHN.SMITH@UBISOFT.COM", 
+                Email = "john.smith@ubisoft.com", 
+                NormalizedEmail = "JOHN.SMITH@UBISOFT.COM", 
+                EmailConfirmed = true,
+                PasswordHash = this._passwordHasher.HashPassword(null!, "Password1!"),
+                SecurityStamp = Guid.NewGuid().ToString()
+            }
         );
     }
 
+    private void seedRoles(ModelBuilder modelBuilder) {
+        modelBuilder.Entity<Role>().HasData(
+            new Role { Id = 1, Name = "Admin", NormalizedName = "ADMIN" },
+            new Role { Id = 2, Name = "User", NormalizedName = "USER" }
+        );
+    }
+
+    private void seedUserRoles(ModelBuilder modelBuilder) {
+        modelBuilder.Entity<IdentityUserRole<int>>().HasData(
+            new IdentityUserRole<int> { RoleId = 1, UserId = 1 },
+            new IdentityUserRole<int> { RoleId = 2, UserId = 2 },
+            new IdentityUserRole<int> { RoleId = 2, UserId = 3 }
+        );
+    }
+    
     private void seedSoftwareHouses(ModelBuilder modelBuilder) {
         modelBuilder.Entity<SoftwareHouse>().HasData(
             new SoftwareHouse { Id = 1, Name = "Rockstar Games" },
@@ -125,19 +133,19 @@ public class BaseContext : IdentityDbContext<User, IdentityRole<int>, int> {
                 Id = 1, 
                 Username = "sim1-dev",
                 UserId = 1,
-                softwarehouse_id = 1,
+                SoftwareHouseId = 1,
             },
             new { 
                 Id = 2, 
                 Username = "andreasssss",
                 UserId = 2,
-                softwarehouse_id = 1,
+                SoftwareHouseId = 1,
             },
             new { 
                 Id = 3, 
                 Username = "johnSmith15",
                 UserId = 3,
-                softwarehouse_id = 2,
+                SoftwareHouseId = 2,
             }
         );
     }
@@ -175,8 +183,8 @@ public class BaseContext : IdentityDbContext<User, IdentityRole<int>, int> {
                 Description = "Developed by the creators of Grand Theft Auto V and Red Dead Redemption, Red Dead Redemption 2 is an epic tale of life in America's unforgiving heartland.", 
                 ReleaseDate = new DateTime(2018, 10, 26), 
                 Price = 79.99M,
-                category_id = 1,
-                softwarehouse_id = 1,
+                CategoryId = 1,
+                SoftwareHouseId = 1,
             },
             new { 
                 Id = 2, 
@@ -184,18 +192,18 @@ public class BaseContext : IdentityDbContext<User, IdentityRole<int>, int> {
                 Description = "The Last of Us Part II is a 2020 action-adventure game developed by Naughty Dog and published by Sony Interactive Entertainment.", 
                 ReleaseDate = new DateTime(2020, 08, 11), 
                 Price = 59.99M,
-                category_id = 2, 
-                softwarehouse_id = 8 
+                CategoryId = 2, 
+                SoftwareHouseId = 8 
             }
         );
     }
 
-    public void seedGamesPlatforms(ModelBuilder modelBuilder) {
-        modelBuilder.Entity("games_platforms").HasData(
-            new { Id = 1, GameId = 1, PlatformId = 1 },
-            new { Id = 2, GameId = 1, PlatformId = 2 },
-            new { Id = 3, GameId = 1, PlatformId = 4 },
-            new { Id = 4, GameId = 2, PlatformId = 4 }
+    public void seedGamePlatforms(ModelBuilder modelBuilder) {
+        modelBuilder.Entity("GamePlatform").HasData(
+            new { GamesId = 1, PlatformsId = 1 },
+            new { GamesId = 1, PlatformsId = 2 },
+            new { GamesId = 1, PlatformsId = 4 },
+            new { GamesId = 2, PlatformsId = 4 }
         );
     }
 

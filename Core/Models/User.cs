@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations.Schema;
+using GamesAPI.Models;
 using Microsoft.AspNetCore.Identity;
 
 namespace GamesAPI.Core.Models;
@@ -6,13 +7,10 @@ namespace GamesAPI.Core.Models;
 [Table("users")]
 public class User : IdentityUser<int> {
 
-    [Column("firstname")]
+    public override int Id { get; set; }
+
     public string? FirstName { get; set; }
-    
-    [Column("lastname")]
     public string? LastName { get; set; }
     public List<Developer>? DeveloperAccounts { get; set; }
     public List<Review>? Reviews;
-
-    //public List<Game>? OwnedGames { get; set; }
 }

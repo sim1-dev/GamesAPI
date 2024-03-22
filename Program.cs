@@ -9,112 +9,127 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using GamesAPI.Core.Middleware;
+using Serilog;
 
-var builder = WebApplication.CreateBuilder(args);
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .WriteTo.File("Logs/error.log", rollingInterval: RollingInterval.Day)
+    .CreateLogger();
 
-// Add services to the container.
-string? connectionString = builder.Configuration.GetConnectionString("BaseContext");
+try {
+    var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<BaseContext>(option => option.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+    // Add services to the container.
+    string? connectionString = builder.Configuration.GetConnectionString("BaseContext");
 
-builder.Services
-    .AddAuthentication(options => {
-        options.DefaultAuthenticateScheme = IdentityConstants.BearerScheme;
-        options.DefaultChallengeScheme = IdentityConstants.BearerScheme;
-    })
-    .AddBearerToken()
-;
+    builder.Services.AddDbContext<BaseContext>(option => option.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
-builder.Services
-	.AddAuthorization(option => {
-        option.AddPolicy("IsGameDeveloper", policy => policy.Requirements.Add(new IsGameDeveloperRequirement()));
-        option.AddPolicy("IsReviewerUser", policy => policy.Requirements.Add(new IsReviewerUserRequirement()));    
-	});
+    builder.Services
+        .AddAuthentication(options => {
+            options.DefaultAuthenticateScheme = IdentityConstants.BearerScheme;
+            options.DefaultChallengeScheme = IdentityConstants.BearerScheme;
+        })
+        .AddBearerToken()
+    ;
 
-builder.Services
-	.AddIdentityApiEndpoints<User>()
-	.AddRoles<Role>()
-	.AddEntityFrameworkStores<BaseContext>()
-	.AddDefaultTokenProviders()
-;
+    builder.Services
+        .AddAuthorization(option => {
+            option.AddPolicy("IsGameDeveloper", policy => policy.Requirements.Add(new IsGameDeveloperRequirement()));
+            option.AddPolicy("IsReviewerUser", policy => policy.Requirements.Add(new IsReviewerUserRequirement()));    
+        });
 
-builder.Services
-    .AddSingleton<PasswordHasher<User>>()
-;
+    builder.Services
+        .AddIdentityApiEndpoints<User>()
+        .AddRoles<Role>()
+        .AddEntityFrameworkStores<BaseContext>()
+        .AddDefaultTokenProviders()
+    ;
 
-builder.Services
-    .AddScoped(typeof(UserContextService))
-;
+    builder.Services
+        .AddSingleton<PasswordHasher<User>>()
+    ;
 
-builder.Services
-    .AddScoped<IAuthorizationHandler, IsGameDeveloperHandler>()
-    .AddScoped<IAuthorizationHandler, IsReviewerUserHandler>()
-;
+    builder.Services
+        .AddScoped(typeof(UserContextService))
+    ;
 
-builder.Services
-    .AddScoped<IPlatformService, PlatformService>()
-    .AddScoped<ICategoryService, CategoryService>()
-    .AddScoped<IGameService, GameService>()
-    .AddScoped<IReviewService, ReviewService>()
-    .AddScoped<ISoftwareHouseService, SoftwareHouseService>()
-    //.AddScoped(typeof(GamePlatformService))
-;
+    builder.Services
+        .AddScoped<IAuthorizationHandler, IsGameDeveloperHandler>()
+        .AddScoped<IAuthorizationHandler, IsReviewerUserHandler>()
+    ;
 
-builder.Services
-    .AddScoped<IPlatformRepository, PlatformRepository>()
-    .AddScoped<ICategoryRepository, CategoryRepository>()
-    .AddScoped<IGameRepository, GameRepository>()
-    .AddScoped<IReviewRepository, ReviewRepository>()
-    .AddScoped<ISoftwareHouseRepository, SoftwareHouseRepository>()
-;
+    builder.Services
+        .AddScoped<IPlatformService, PlatformService>()
+        .AddScoped<ICategoryService, CategoryService>()
+        .AddScoped<IGameService, GameService>()
+        .AddScoped<IReviewService, ReviewService>()
+        .AddScoped<ISoftwareHouseService, SoftwareHouseService>()
+        //.AddScoped(typeof(GamePlatformService))
+    ;
 
-builder.Services.AddAutoMapper(typeof(Program));
+    builder.Services
+        .AddScoped<IPlatformRepository, PlatformRepository>()
+        .AddScoped<ICategoryRepository, CategoryRepository>()
+        .AddScoped<IGameRepository, GameRepository>()
+        .AddScoped<IReviewRepository, ReviewRepository>()
+        .AddScoped<ISoftwareHouseRepository, SoftwareHouseRepository>()
+    ;
 
-builder.Services
-    .AddControllers()
-    .AddJsonOptions(options => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles)
-;
+    builder.Services.AddAutoMapper(typeof(Program));
 
-builder.Services.AddRouting(options => options.LowercaseUrls = true);
+    builder.Services
+        .AddControllers()
+        .AddJsonOptions(options => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles)
+    ;
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
-builder.Services.AddSwaggerGen(option => {
-    option.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme {
-                In = ParameterLocation.Header,
-                Name = "Authorization",
-                Type = SecuritySchemeType.ApiKey
+    // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+    builder.Services.AddEndpointsApiExplorer();
+
+    builder.Services.AddSwaggerGen(option => {
+        option.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme {
+                    In = ParameterLocation.Header,
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey
+                }
+        );
+        
+        option.AddSecurityRequirement(new OpenApiSecurityRequirement {
+                {
+                    new OpenApiSecurityScheme {
+                        Reference = new OpenApiReference {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "oauth2"
+                        }
+                    },
+                    []
+                }
             }
-    );
-    
-    option.AddSecurityRequirement(new OpenApiSecurityRequirement {
-            {
-                new OpenApiSecurityScheme {
-                    Reference = new OpenApiReference {
-                        Type = ReferenceType.SecurityScheme,
-                        Id = "oauth2"
-                    }
-                },
-                []
-            }
-        }
-    );
-});
+        );
+    });
 
-var app = builder.Build();
-app.UseAuthorization();
+    var app = builder.Build();
+    app.UseAuthorization();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment()) {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    // Configure the HTTP request pipeline.
+    if (app.Environment.IsDevelopment()) {
+        app.UseSwagger();
+        app.UseSwaggerUI();
+    }
+
+    app.MapIdentityApi<User>();
+    app.UseHttpsRedirection();
+
+    app.UseMiddleware<ExceptionHandlerMiddleware>();
+
+    app.MapControllers();
+
+    app.Run();
+} catch (Exception ex) {
+    Log.Fatal(ex, $"Application terminated unexpectedly: {ex}");
+} finally {
+    Log.CloseAndFlush();
 }
-
-app.MapIdentityApi<User>();
-app.UseHttpsRedirection();
-
-
-app.MapControllers();
-
-app.Run();
+    

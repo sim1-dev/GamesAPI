@@ -52,7 +52,7 @@ builder.Services
 ;
 
 builder.Services
-    .AddScoped(typeof(PlatformService))
+    .AddScoped<IPlatformService, PlatformService>()
     .AddScoped<ICategoryService, CategoryService>()
     .AddScoped<IGameService, GameService>()
     .AddScoped(typeof(ReviewService))
@@ -61,6 +61,7 @@ builder.Services
 ;
 
 builder.Services
+    .AddScoped<IPlatformRepository, PlatformRepository>()
     .AddScoped<ICategoryRepository, CategoryRepository>()
     .AddScoped<IGameRepository, GameRepository>()
 ;

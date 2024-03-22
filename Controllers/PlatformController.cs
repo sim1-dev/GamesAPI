@@ -8,14 +8,16 @@ using GamesAPI.Models;
 
 namespace PlatformsAPI.Controllers;
 
+// TODO readapt for repository
+
 [ApiController]
 [Route("api/[controller]")]
 public class PlatformController : ControllerBase
 {
     private readonly IMapper _mapper;
-    private readonly PlatformService _platformService;
+    private readonly IPlatformService _platformService;
 
-    public PlatformController(IMapper mapper, PlatformService platformService) {
+    public PlatformController(IMapper mapper, IPlatformService platformService) {
         this._mapper = mapper;
         this._platformService = platformService;
     }
@@ -23,7 +25,7 @@ public class PlatformController : ControllerBase
     [AllowAnonymous]
 	[HttpGet]
     public async Task<ActionResult<Collection<PlatformDto>>> Get() {
-        List<Platform>? platforms = await this._platformService.GetAll();
+        List<Platform>? platforms = (await this._platformService.GetAll()).ToList();
 
         if(platforms is null)
             return NotFound();
@@ -90,9 +92,9 @@ public class PlatformController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<ActionResult<PlatformDto>> Delete(int id) {
             
-        Platform? platform = await this._platformService.Delete(id);
+        bool isDeleted = await this._platformService.Delete(id);
 
-        if(platform is null)
+        if(!isDeleted)
             return NotFound();
 
         return Ok();

@@ -6,7 +6,13 @@ namespace GamesAPI.Profiles;
 class ReviewProfile : Profile {
     public ReviewProfile() {
         CreateMap<CreateReviewDto, Review>();
-        CreateMap<UpdateReviewDto, Review>();
+        CreateMap<UpdateReviewDto, Review>()
+            .ForAllMembers(opts => opts.Condition((updateReviewDto, review, srcMember) => 
+                srcMember != null
+                && srcMember.ToString() != "0"
+                && srcMember.ToString() != new DateTime().ToString()
+            ));
+        ;
 
         CreateMap<Review, ReviewDto>()
             .ForMember(reviewDto => reviewDto.ReviewerUserDto, opt => opt.MapFrom(review => review.ReviewerUser))

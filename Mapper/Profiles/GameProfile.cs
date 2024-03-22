@@ -6,7 +6,13 @@ namespace GamesAPI.Profiles;
 class GameProfile : Profile {
     public GameProfile() {
         CreateMap<CreateGameDto, Game>();
-        CreateMap<UpdateGameDto, Game>();
+        CreateMap<UpdateGameDto, Game>()
+            .ForAllMembers(opts => opts.Condition((updateGameDto, game, srcMember) => 
+                srcMember != null
+                && srcMember.ToString() != "0"
+                && srcMember.ToString() != new DateTime().ToString()
+            ));
+        ;
 
         CreateMap<Game, GameDto>()
             .ForMember(gameDto => gameDto.SoftwareHouseDto, option => option.MapFrom(game => game.SoftwareHouse))

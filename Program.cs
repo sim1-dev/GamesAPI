@@ -122,6 +122,7 @@ try {
     app.MapIdentityApi<User>();
     app.UseHttpsRedirection();
 
+    app.UseMiddleware<ResponseWrapperMiddleware>();
     app.UseMiddleware<ExceptionHandlerMiddleware>();
 
     app.MapControllers();

@@ -14,11 +14,11 @@ namespace GamesAPI.Controllers;
 public class ReviewController : ControllerBase
 {
     private readonly IMapper _mapper;
-    private readonly ReviewService _reviewService;
+    private readonly IReviewService _reviewService;
 
     private readonly UserContextService _userContextService;
 
-    public ReviewController(IMapper mapper, ReviewService reviewService, UserContextService userContextService) {
+    public ReviewController(IMapper mapper, IReviewService reviewService, UserContextService userContextService) {
         this._mapper = mapper;
         this._reviewService = reviewService;
         this._userContextService = userContextService;
@@ -27,10 +27,7 @@ public class ReviewController : ControllerBase
     [AllowAnonymous]
 	[HttpGet]
     public async Task<ActionResult<Collection<ReviewDto>>> Get() {
-        List<Review>? reviews = await this._reviewService.GetAll();
-
-        if(reviews is null)
-            return NotFound();
+        List<Review> reviews = (await this._reviewService.GetAll()).ToList();
 
         List<ReviewDto> reviewDtos = _mapper.Map<List<ReviewDto>>(reviews);
 
@@ -62,7 +59,7 @@ public class ReviewController : ControllerBase
         Review? existingReviewOnGame = await this._reviewService.FindByReviewerUserIdAndGameId(userId, createReviewDto.GameId);
 
         if(existingReviewOnGame is not null)
-            return BadRequest("A review already exists for this game by this user");
+            return Conflict("A review already exists for this game by this user");
 
 
         Review review = await this._reviewService.CreateForUser(createReviewDto, userId);
@@ -92,9 +89,9 @@ public class ReviewController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<ActionResult<ReviewDto>> Delete(int id) {
             
-        Review? review = await this._reviewService.Delete(id);
+        bool isDeleted = await this._reviewService.Delete(id);
 
-        if(review is null)
+        if(!isDeleted)
             return NotFound();
 
         return Ok();

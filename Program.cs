@@ -12,12 +12,16 @@ using Microsoft.OpenApi.Models;
 using GamesAPI.Core.Middleware;
 using Serilog;
 
-Log.Logger = new LoggerConfiguration()
-    .WriteTo.Console()
-    .WriteTo.File("Logs/error.log", rollingInterval: RollingInterval.Day)
-    .CreateLogger();
-
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Logging
+    .ClearProviders()
+    .AddSerilog(new LoggerConfiguration()
+        .WriteTo.Console()
+        .WriteTo.File("Logs/error.log", rollingInterval: RollingInterval.Day)
+        .CreateLogger()
+    )
+;
 
 // Add services to the container.
 string? connectionString = builder.Configuration.GetConnectionString("BaseContext");

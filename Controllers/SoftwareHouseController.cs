@@ -13,9 +13,9 @@ namespace GamesAPI.Controllers;
 public class SoftwareHouseController : ControllerBase
 {
     private readonly IMapper _mapper;
-    private readonly SoftwareHouseService _softwareHouseService;
+    private readonly ISoftwareHouseService _softwareHouseService;
 
-    public SoftwareHouseController(IMapper mapper, SoftwareHouseService softwareHouseService) {
+    public SoftwareHouseController(IMapper mapper, ISoftwareHouseService softwareHouseService) {
         this._mapper = mapper;
         this._softwareHouseService = softwareHouseService;
     }
@@ -23,10 +23,7 @@ public class SoftwareHouseController : ControllerBase
     [AllowAnonymous]
 	[HttpGet]
     public async Task<ActionResult<Collection<SoftwareHouseDto>>> Get() {
-        List<SoftwareHouse>? softwareHouses = await this._softwareHouseService.GetAll();
-
-        if(softwareHouses is null)
-            return NotFound();
+        List<SoftwareHouse>? softwareHouses = (await this._softwareHouseService.GetAll()).ToList();
 
         List<SoftwareHouseDto> softwareHouseDtos = _mapper.Map<List<SoftwareHouseDto>>(softwareHouses);
 
@@ -78,10 +75,9 @@ public class SoftwareHouseController : ControllerBase
     [Authorize(Roles = "Admin")]
     [HttpDelete("{id}")]
     public async Task<ActionResult<SoftwareHouseDto>> Delete(int id) {
-            
-        SoftwareHouse? softwareHouse = await this._softwareHouseService.Delete(id);
+        bool isDeleted = await this._softwareHouseService.Delete(id);
 
-        if(softwareHouse is null)
+        if(!isDeleted)
             return NotFound();
 
         return Ok();

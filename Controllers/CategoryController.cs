@@ -1,9 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.ObjectModel;
-using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
-using GamesAPI.Core.Models;
 using GamesAPI.Dtos;
+using GamesAPI.Models;
+using AutoMapper;
 using GamesAPI.Services;
 
 namespace GamesAPI.Controllers;
@@ -12,23 +11,20 @@ namespace GamesAPI.Controllers;
 [Route("api/[controller]")]
 public class CategoryController : ControllerBase
 {
+    private readonly ICategoryService _categoryService;
     private readonly IMapper _mapper;
-    private readonly CategoryService _categoryService;
 
-    public CategoryController(IMapper mapper, CategoryService categoryService) {
-        this._mapper = mapper;
+    public CategoryController(ICategoryService categoryService, IMapper mapper) {
         this._categoryService = categoryService;
+        this._mapper = mapper;
     }
     
     [AllowAnonymous]
 	[HttpGet]
-    public async Task<ActionResult<Collection<CategoryDto>>> Get() {
-        List<Category>? categories = await this._categoryService.GetAll();
+    public async Task<ActionResult<IEnumerable<CategoryDto>>> Get() {
+        List<Category> categories = (await this._categoryService.GetAll()).ToList();
 
-        if(categories is null)
-            return NotFound();
-
-        List<CategoryDto> categoryDtos = _mapper.Map<List<CategoryDto>>(categories);
+        List<CategoryDto> categoryDtos = this._mapper.Map<List<CategoryDto>>(categories);
 
         return Ok(categoryDtos);
     }
@@ -41,7 +37,7 @@ public class CategoryController : ControllerBase
         if(category is null)
             return NotFound();
 
-        CategoryDetailDto categoryDetailDto = _mapper.Map<CategoryDetailDto>(category);
+        CategoryDetailDto categoryDetailDto = this._mapper.Map<CategoryDetailDto>(category);
 
         return Ok(categoryDetailDto);
     }
@@ -58,13 +54,13 @@ public class CategoryController : ControllerBase
             return Conflict("Category already exists");
 
 
+
         Category? category = await this._categoryService.Create(createCategoryDto);
 
         if(category is null)
             return StatusCode(500, "An error has occurred while creating. Please contact the system administrator");  
 
-            
-        CategoryDto categoryDto = _mapper.Map<CategoryDto>(category);
+        CategoryDto categoryDto = this._mapper.Map<CategoryDto>(category);
 
         return categoryDto;
     }
@@ -79,9 +75,9 @@ public class CategoryController : ControllerBase
         Category? category = await this._categoryService.Update(id, updateCategoryDto);
 
         if(category is null)
-            return StatusCode(500, "An error has occurred while updating. Please contact the system administrator");      
+            return StatusCode(500, "An error has occurred while updating. Please contact the system administrator");
 
-        CategoryDto categoryDto = _mapper.Map<CategoryDto>(category);
+        CategoryDto categoryDto = this._mapper.Map<CategoryDto>(category);
 
         return categoryDto;
     }
@@ -89,10 +85,9 @@ public class CategoryController : ControllerBase
     [Authorize(Roles = "Admin")]
     [HttpDelete("{id}")]
     public async Task<ActionResult<CategoryDto>> Delete(int id) {
-            
-        Category? category = await this._categoryService.Delete(id);
+        bool isDeleted = await this._categoryService.Delete(id);
 
-        if(category is null)
+        if(!isDeleted)
             return NotFound();
 
         return Ok();

@@ -1,7 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-using GamesAPI.Core.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using GamesAPI.Core.Models;
+using GamesAPI.Models;
 
 namespace GamesAPI.Core.DataContexts;
 

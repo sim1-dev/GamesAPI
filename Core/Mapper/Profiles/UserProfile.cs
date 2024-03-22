@@ -1,8 +1,8 @@
 using AutoMapper;
 using GamesAPI.Core.Models;
-using GamesAPI.Dtos;
+using GamesAPI.Core.Dtos;
 
-namespace GamesAPI.Utilities;
+namespace GamesAPI.Core.Profiles;
 class UserProfile : Profile {
     public UserProfile() {
         // CreateMap<CreateUserDto, User>();

@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
-using GamesAPI.Core.Models;
 using System.Collections.ObjectModel;
 using AutoMapper;
 using GamesAPI.Dtos;
 using Microsoft.AspNetCore.Authorization;
 using GamesAPI.Services;
+using GamesAPI.Models;
 
 namespace GamesAPI.Controllers;
 
@@ -13,19 +13,17 @@ namespace GamesAPI.Controllers;
 public class GameController : ControllerBase
 {
     private readonly IMapper _mapper;
-    private readonly GameService _gameService;
-    private readonly PlatformService _platformService;
+    private readonly IGameService _gameService;
 
-    public GameController(IMapper mapper, GameService gameService, PlatformService platformService) {
-        this._mapper = mapper;
+    public GameController(IGameService gameService, IMapper mapper) {
         this._gameService = gameService;
-        this._platformService = platformService;
+        this._mapper = mapper;
     }
     
     [AllowAnonymous]
 	[HttpGet]
     public async Task<ActionResult<Collection<GameDto>>> Get() {
-        List<Game>? games = await this._gameService.GetAll();
+        List<Game>? games = (await this._gameService.GetAll()).ToList();
 
         if(games is null)
             return NotFound();
@@ -80,10 +78,9 @@ public class GameController : ControllerBase
     [HttpDelete("{id}")]
     [Authorize(Policy = "IsGameDeveloper")]
     public async Task<ActionResult<GameDto>> Delete(int id) {
-            
-        Game? game = await this._gameService.Delete(id);
+        bool isDeleted = await this._gameService.Delete(id);
 
-        if(game is null)
+        if(!isDeleted)
             return NotFound();
 
         return Ok();

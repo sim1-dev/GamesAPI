@@ -8,8 +8,6 @@ using GamesAPI.Models;
 
 namespace PlatformsAPI.Controllers;
 
-// TODO readapt for repository
-
 [ApiController]
 [Route("api/[controller]")]
 public class PlatformController : ControllerBase

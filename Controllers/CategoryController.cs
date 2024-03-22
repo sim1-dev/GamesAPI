@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using GamesAPI.Dtos;
 using GamesAPI.Models;
 using AutoMapper;
+using GamesAPI.Services;
 
 namespace GamesAPI.Controllers;
 

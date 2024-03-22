@@ -1,6 +1,5 @@
 using GamesAPI.Core.DataContexts;
 using GamesAPI.Models;
-using GamesAPI.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace GamesAPI.Repositories;

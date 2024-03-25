@@ -69,6 +69,7 @@ builder.Services
         .AddScoped<IReviewService, ReviewService>()
         .AddScoped<ISoftwareHouseService, SoftwareHouseService>()
         .AddScoped<IGamePlatformService, GamePlatformService>()
+        .AddScoped<IDeveloperService, DeveloperService>()
     ;
 
     builder.Services
@@ -78,6 +79,7 @@ builder.Services
         .AddScoped<IReviewRepository, ReviewRepository>()
         .AddScoped<ISoftwareHouseRepository, SoftwareHouseRepository>()
         .AddScoped<IGamePlatformRepository, GamePlatformRepository>()
+        .AddScoped<IDeveloperRepository, DeveloperRepository>()
     ;
 
 builder.Services.AddAutoMapper(typeof(Program));

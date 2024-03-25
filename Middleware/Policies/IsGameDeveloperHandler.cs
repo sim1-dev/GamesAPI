@@ -30,7 +30,6 @@ public class IsGameDeveloperHandler : AuthorizationHandler<IsGameDeveloperRequir
     }
 
     protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, IsGameDeveloperRequirement requirement) {
-
         if(context.Resource is not HttpContext httpContext) {
             context.Fail();
             return Task.CompletedTask;
@@ -48,7 +47,7 @@ public class IsGameDeveloperHandler : AuthorizationHandler<IsGameDeveloperRequir
             return Task.CompletedTask;
         }
 
-        object? unparsedGameIdFromRoute = routeData.Values["id"];
+        object? unparsedGameIdFromRoute = routeData.Values["id"] ?? routeData.Values["gameId"];
 
         if(unparsedGameIdFromRoute is null) {
             context.Fail(new AuthorizationFailureReason(this, $"{_CLASS_NAME}: No game id provided"));

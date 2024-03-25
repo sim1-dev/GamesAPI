@@ -30,6 +30,8 @@ public class BaseContext : IdentityDbContext<User, Role, int> {
     public DbSet<Game> Games {get; set;}
     public DbSet<Review> Reviews {get; set;}
 
+    public DbSet<GamePlatform> GamePlatforms {get; set;}
+
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         base.OnModelCreating(modelBuilder);
 

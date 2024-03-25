@@ -11,6 +11,7 @@ class GameProfile : Profile {
                 srcMember != null
                 && srcMember.ToString() != "0"
                 && srcMember.ToString() != new DateTime().ToString()
+                && srcMember.ToString() != new List<int>().ToString()
             ));
         ;
 

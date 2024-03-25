@@ -32,6 +32,12 @@ public class PlatformService : IPlatformService {
         return platform;
     }
 
+    public async Task<IEnumerable<Platform>> FindByIds(List<int> ids) {
+        IEnumerable<Platform> platforms = await this._platformRepository.FindByIds(ids);
+        
+        return platforms;
+    }
+
     public async Task<Platform> Create(CreatePlatformDto createPlatformDto) {
         Platform platform = this._mapper.Map<Platform>(createPlatformDto);
 

@@ -7,4 +7,5 @@ public class UpdateGameDto {
     public string? ImageUrl {get; set;}
     public decimal? Price {get; set;}
     public int? SoftwareHouseId { get; set; }
+    public List<int>? PlatformIds { get; set; } = new List<int>();
 }

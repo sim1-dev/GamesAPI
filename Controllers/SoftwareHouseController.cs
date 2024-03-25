@@ -9,7 +9,7 @@ using GamesAPI.Services;
 namespace GamesAPI.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/[controller]s")]
 public class SoftwareHouseController : ControllerBase
 {
     private readonly IMapper _mapper;

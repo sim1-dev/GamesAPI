@@ -9,7 +9,7 @@ using GamesAPI.Models;
 namespace PlatformsAPI.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/[controller]s")]
 public class PlatformController : ControllerBase
 {
     private readonly IMapper _mapper;

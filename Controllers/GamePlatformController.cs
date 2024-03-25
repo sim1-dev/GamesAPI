@@ -9,7 +9,7 @@ using GamesAPI.Models;
 namespace GamesAPI.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/[controller]s")]
 public class GamePlatformController : ControllerBase
 {
     private readonly IGamePlatformService _gamePlatformService;

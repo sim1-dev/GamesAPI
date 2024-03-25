@@ -8,7 +8,7 @@ using GamesAPI.Services;
 namespace GamesAPI.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/categories")]
 public class CategoryController : ControllerBase
 {
     private readonly ICategoryService _categoryService;

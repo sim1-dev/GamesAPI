@@ -10,7 +10,7 @@ using GamesAPI.Models;
 namespace GamesAPI.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/[controller]s")]
 public class DeveloperController : ControllerBase
 {
     private readonly IMapper _mapper;

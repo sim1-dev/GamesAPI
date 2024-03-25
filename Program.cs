@@ -12,52 +12,55 @@ using Microsoft.OpenApi.Models;
 using GamesAPI.Core.Middleware;
 using Serilog;
 
-Log.Logger = new LoggerConfiguration()
-    .WriteTo.Console()
-    .WriteTo.File("Logs/error.log", rollingInterval: RollingInterval.Day)
-    .CreateLogger();
+var builder = WebApplication.CreateBuilder(args);
 
-try {
-    var builder = WebApplication.CreateBuilder(args);
+builder.Logging
+    .ClearProviders()
+    .AddSerilog(new LoggerConfiguration()
+        .WriteTo.Console()
+        .WriteTo.File("Logs/error.log", rollingInterval: RollingInterval.Day)
+        .CreateLogger()
+    )
+;
 
-    // Add services to the container.
-    string? connectionString = builder.Configuration.GetConnectionString("BaseContext");
+// Add services to the container.
+string? connectionString = builder.Configuration.GetConnectionString("BaseContext");
 
-    builder.Services.AddDbContext<BaseContext>(option => option.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+builder.Services.AddDbContext<BaseContext>(option => option.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
-    builder.Services
-        .AddAuthentication(options => {
-            options.DefaultAuthenticateScheme = IdentityConstants.BearerScheme;
-            options.DefaultChallengeScheme = IdentityConstants.BearerScheme;
-        })
-        .AddBearerToken()
-    ;
+builder.Services
+    .AddAuthentication(options => {
+        options.DefaultAuthenticateScheme = IdentityConstants.BearerScheme;
+        options.DefaultChallengeScheme = IdentityConstants.BearerScheme;
+    })
+    .AddBearerToken()
+;
 
-    builder.Services
-        .AddAuthorization(option => {
-            option.AddPolicy("IsGameDeveloper", policy => policy.Requirements.Add(new IsGameDeveloperRequirement()));
-            option.AddPolicy("IsReviewerUser", policy => policy.Requirements.Add(new IsReviewerUserRequirement()));    
-        });
+builder.Services
+    .AddAuthorization(option => {
+        option.AddPolicy("IsGameDeveloper", policy => policy.Requirements.Add(new IsGameDeveloperRequirement()));
+        option.AddPolicy("IsReviewerUser", policy => policy.Requirements.Add(new IsReviewerUserRequirement()));    
+    });
 
-    builder.Services
-        .AddIdentityApiEndpoints<User>()
-        .AddRoles<Role>()
-        .AddEntityFrameworkStores<BaseContext>()
-        .AddDefaultTokenProviders()
-    ;
+builder.Services
+    .AddIdentityApiEndpoints<User>()
+    .AddRoles<Role>()
+    .AddEntityFrameworkStores<BaseContext>()
+    .AddDefaultTokenProviders()
+;
 
-    builder.Services
-        .AddSingleton<PasswordHasher<User>>()
-    ;
+builder.Services
+    .AddSingleton<PasswordHasher<User>>()
+;
 
-    builder.Services
-        .AddScoped(typeof(UserContextService))
-    ;
+builder.Services
+    .AddScoped(typeof(UserContextService))
+;
 
-    builder.Services
-        .AddScoped<IAuthorizationHandler, IsGameDeveloperHandler>()
-        .AddScoped<IAuthorizationHandler, IsReviewerUserHandler>()
-    ;
+builder.Services
+    .AddScoped<IAuthorizationHandler, IsGameDeveloperHandler>()
+    .AddScoped<IAuthorizationHandler, IsReviewerUserHandler>()
+;
 
     builder.Services
         .AddScoped<IPlatformService, PlatformService>()
@@ -77,61 +80,56 @@ try {
         .AddScoped<IGamePlatformRepository, GamePlatformRepository>()
     ;
 
-    builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddAutoMapper(typeof(Program));
 
-    builder.Services
-        .AddControllers()
-        .AddJsonOptions(options => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles)
-    ;
+builder.Services
+    .AddControllers()
+    .AddJsonOptions(options => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles)
+;
 
-    builder.Services.AddRouting(options => options.LowercaseUrls = true);
+builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
-    // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-    builder.Services.AddEndpointsApiExplorer();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
 
-    builder.Services.AddSwaggerGen(option => {
-        option.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme {
-                    In = ParameterLocation.Header,
-                    Name = "Authorization",
-                    Type = SecuritySchemeType.ApiKey
-                }
-        );
-        
-        option.AddSecurityRequirement(new OpenApiSecurityRequirement {
-                {
-                    new OpenApiSecurityScheme {
-                        Reference = new OpenApiReference {
-                            Type = ReferenceType.SecurityScheme,
-                            Id = "oauth2"
-                        }
-                    },
-                    []
-                }
+builder.Services.AddSwaggerGen(option => {
+    option.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme {
+                In = ParameterLocation.Header,
+                Name = "Authorization",
+                Type = SecuritySchemeType.ApiKey
             }
-        );
-    });
+    );
+    
+    option.AddSecurityRequirement(new OpenApiSecurityRequirement {
+            {
+                new OpenApiSecurityScheme {
+                    Reference = new OpenApiReference {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "oauth2"
+                    }
+                },
+                []
+            }
+        }
+    );
+});
 
-    var app = builder.Build();
-    app.UseAuthorization();
+var app = builder.Build();
+app.UseAuthorization();
 
-    // Configure the HTTP request pipeline.
-    if (app.Environment.IsDevelopment()) {
-        app.UseSwagger();
-        app.UseSwaggerUI();
-    }
-
-    app.MapIdentityApi<User>();
-    app.UseHttpsRedirection();
-
-    app.UseMiddleware<ResponseWrapperMiddleware>();
-    app.UseMiddleware<ExceptionHandlerMiddleware>();
-
-    app.MapControllers();
-
-    app.Run();
-} catch (Exception ex) {
-    Log.Fatal(ex, $"Application terminated unexpectedly: {ex}");
-} finally {
-    Log.CloseAndFlush();
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment()) {
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
+
+app.MapIdentityApi<User>();
+app.UseHttpsRedirection();
+
+app.UseMiddleware<ResponseWrapperMiddleware>();
+app.UseMiddleware<ExceptionHandlerMiddleware>();
+
+app.MapControllers();
+
+app.Run();
     

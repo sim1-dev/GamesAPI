@@ -1,13 +1,14 @@
 using GamesAPI.Core.Models;
-using Serilog;
 
 namespace GamesAPI.Core.Middleware;
 
 public class ExceptionHandlerMiddleware {
     private readonly RequestDelegate _next;
+    private readonly ILogger<ExceptionHandlerMiddleware> _logger;
 
-    public ExceptionHandlerMiddleware(RequestDelegate next) {
+    public ExceptionHandlerMiddleware(RequestDelegate next, ILogger<ExceptionHandlerMiddleware> logger) {
         _next = next;
+        _logger = logger;
     }
 
     public async Task Invoke(HttpContext httpContext){
@@ -19,7 +20,7 @@ public class ExceptionHandlerMiddleware {
     }
 
     private async Task HandleException(Exception e, HttpContext httpContext) {
-        Log.Error(e, "ExceptionHandlerMiddleware");
+        this._logger.LogError(e, "ExceptionHandlerMiddleware");
 
         httpContext.Response.StatusCode = 500;
 

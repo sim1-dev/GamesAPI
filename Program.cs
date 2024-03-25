@@ -62,22 +62,23 @@ builder.Services
     .AddScoped<IAuthorizationHandler, IsReviewerUserHandler>()
 ;
 
-builder.Services
-    .AddScoped<IPlatformService, PlatformService>()
-    .AddScoped<ICategoryService, CategoryService>()
-    .AddScoped<IGameService, GameService>()
-    .AddScoped<IReviewService, ReviewService>()
-    .AddScoped<ISoftwareHouseService, SoftwareHouseService>()
-    //.AddScoped(typeof(GamePlatformService))
-;
+    builder.Services
+        .AddScoped<IPlatformService, PlatformService>()
+        .AddScoped<ICategoryService, CategoryService>()
+        .AddScoped<IGameService, GameService>()
+        .AddScoped<IReviewService, ReviewService>()
+        .AddScoped<ISoftwareHouseService, SoftwareHouseService>()
+        .AddScoped<IGamePlatformService, GamePlatformService>()
+    ;
 
-builder.Services
-    .AddScoped<IPlatformRepository, PlatformRepository>()
-    .AddScoped<ICategoryRepository, CategoryRepository>()
-    .AddScoped<IGameRepository, GameRepository>()
-    .AddScoped<IReviewRepository, ReviewRepository>()
-    .AddScoped<ISoftwareHouseRepository, SoftwareHouseRepository>()
-;
+    builder.Services
+        .AddScoped<IPlatformRepository, PlatformRepository>()
+        .AddScoped<ICategoryRepository, CategoryRepository>()
+        .AddScoped<IGameRepository, GameRepository>()
+        .AddScoped<IReviewRepository, ReviewRepository>()
+        .AddScoped<ISoftwareHouseRepository, SoftwareHouseRepository>()
+        .AddScoped<IGamePlatformRepository, GamePlatformRepository>()
+    ;
 
 builder.Services.AddAutoMapper(typeof(Program));
 

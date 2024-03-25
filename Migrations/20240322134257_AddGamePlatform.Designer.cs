@@ -3,6 +3,7 @@ using System;
 using GamesAPI.Core.DataContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GamesAPI.Migrations
 {
     [DbContext(typeof(BaseContext))]
-    partial class BaseContextModelSnapshot : ModelSnapshot
+    [Migration("20240322134257_AddGamePlatform")]
+    partial class AddGamePlatform
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -140,7 +143,7 @@ namespace GamesAPI.Migrations
                         {
                             Id = 1,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "60c03682-e48a-41ed-a5cd-e9e5cdb742bb",
+                            ConcurrencyStamp = "de528eb4-d7ad-4561-b29f-e4ee04c0a72f",
                             Email = "admin@rockstargames.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",
@@ -148,9 +151,9 @@ namespace GamesAPI.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@ROCKSTARGAMES.COM",
                             NormalizedUserName = "ADMIN@ROCKSTARGAMES.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAECwCbaouZV0HCQJnSFBV6bb+JVofKyzktPKARY2+5GYuo+rgI5qP53Cf6eoZyO1Fwg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEFxGFRsKt24Zbpf1nHQVrbCQy5VBhGweiy0bA1ZjhmjB7pV/QdCXbnzhwJ7QR7apPg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "fcca7553-5e81-46ef-98bc-3425481c67e3",
+                            SecurityStamp = "17599c1c-2716-4feb-a118-366b13f742cc",
                             TwoFactorEnabled = false,
                             UserName = "admin@rockstargames.com"
                         },
@@ -158,7 +161,7 @@ namespace GamesAPI.Migrations
                         {
                             Id = 2,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "7eed25b4-3ad4-41d7-98da-142c41ebb7a0",
+                            ConcurrencyStamp = "7bc11f7c-27d0-45ff-ace8-8d3c03628702",
                             Email = "and.rea@rockstargames.com",
                             EmailConfirmed = true,
                             FirstName = "Andrea",
@@ -166,9 +169,9 @@ namespace GamesAPI.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "AND.REA@ROCKSTARGAMES.COM",
                             NormalizedUserName = "AND.REA@ROCKSTARGAMES.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEGI1jPD0SFxLKJg4tmotdSTBlcya87071m8KiaUqYpuSjQLM7YJHvw1IQGS1l0Thgw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEOAi4nYctaMBJlJuNaHDOF2gMAY3ahU3/0oZ22d6LDcvYuhF1uN1JxwhKBtLPL8ncA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "776573ad-1cf5-4079-8b64-ef48df83aba0",
+                            SecurityStamp = "ebb650cf-d381-4a9f-9c4f-d24316e665f0",
                             TwoFactorEnabled = false,
                             UserName = "and.rea@rockstargames.com"
                         },
@@ -176,7 +179,7 @@ namespace GamesAPI.Migrations
                         {
                             Id = 3,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "09053630-c6e5-43dd-a36e-efe00bdb436d",
+                            ConcurrencyStamp = "7bb424b2-4372-4496-83e8-93a6aba6a016",
                             Email = "john.smith@ubisoft.com",
                             EmailConfirmed = true,
                             FirstName = "John",
@@ -184,9 +187,9 @@ namespace GamesAPI.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "JOHN.SMITH@UBISOFT.COM",
                             NormalizedUserName = "JOHN.SMITH@UBISOFT.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEFlrcxQNZARHssdB6oQ4kSu6jmEt1j6rGRKdPh9vdcDJW1loBB2JZjpknIFeQspSRQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEL0T7OUWHsFiSE3i6X79tNcI9nPaUb+PpVBgKpKEVHJncxYWQ9/ei14yFkUNBv7rmA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "fba8106a-dd04-43a5-a61e-645e372d0c91",
+                            SecurityStamp = "76009152-0562-4318-b0f6-a04aa7a025b1",
                             TwoFactorEnabled = false,
                             UserName = "john.smith@ubisoft.com"
                         });
@@ -389,7 +392,7 @@ namespace GamesAPI.Migrations
 
                     b.HasIndex("PlatformId");
 
-                    b.ToTable("gameplatforms");
+                    b.ToTable("GamePlatform");
 
                     b.HasData(
                         new
@@ -487,7 +490,7 @@ namespace GamesAPI.Migrations
                         {
                             Id = 1,
                             Comment = "This game is awesome!",
-                            CreatedAt = new DateTime(2024, 3, 25, 11, 46, 1, 231, DateTimeKind.Local).AddTicks(5900),
+                            CreatedAt = new DateTime(2024, 3, 22, 14, 42, 56, 590, DateTimeKind.Local).AddTicks(6083),
                             GameId = 1,
                             Score = 9,
                             UserId = 1
@@ -496,7 +499,7 @@ namespace GamesAPI.Migrations
                         {
                             Id = 2,
                             Comment = "Pretty good game, but gets boring after the main questline",
-                            CreatedAt = new DateTime(2024, 3, 25, 11, 46, 1, 231, DateTimeKind.Local).AddTicks(6084),
+                            CreatedAt = new DateTime(2024, 3, 22, 14, 42, 56, 590, DateTimeKind.Local).AddTicks(6180),
                             GameId = 1,
                             Score = 7,
                             UserId = 2
@@ -505,7 +508,7 @@ namespace GamesAPI.Migrations
                         {
                             Id = 3,
                             Comment = "I loved this game!",
-                            CreatedAt = new DateTime(2024, 3, 25, 11, 46, 1, 231, DateTimeKind.Local).AddTicks(6089),
+                            CreatedAt = new DateTime(2024, 3, 22, 14, 42, 56, 590, DateTimeKind.Local).AddTicks(6183),
                             GameId = 2,
                             Score = 10,
                             UserId = 1
@@ -514,7 +517,7 @@ namespace GamesAPI.Migrations
                         {
                             Id = 4,
                             Comment = "I didn't like this game at all...",
-                            CreatedAt = new DateTime(2024, 3, 25, 11, 46, 1, 231, DateTimeKind.Local).AddTicks(6092),
+                            CreatedAt = new DateTime(2024, 3, 22, 14, 42, 56, 590, DateTimeKind.Local).AddTicks(6185),
                             GameId = 1,
                             Score = 1,
                             UserId = 2

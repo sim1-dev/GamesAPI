@@ -6,10 +6,12 @@ using GamesAPI.Repositories;
 namespace GamesAPI.Services;
 
 public class GameService : IGameService {
+    private readonly IPlatformService _platformService;
     private readonly IGameRepository _gameRepository;
     private readonly IMapper _mapper;
 
-    public GameService(IGameRepository gameRepository, IMapper mapper) {
+    public GameService(IGameRepository gameRepository, IMapper mapper, IPlatformService platformService) {
+        this._platformService = platformService;
         this._gameRepository = gameRepository;
         this._mapper = mapper;
     }
@@ -29,10 +31,9 @@ public class GameService : IGameService {
     public async Task<Game> Create(CreateGameDto createGameDto) {
         Game game = this._mapper.Map<Game>(createGameDto);
 
-        // TODO reimplement
-        // // https://learn.microsoft.com/it-it/dotnet/fundamentals/code-analysis/quality-rules/ca1860
-        // if(createGameDto.PlatformIds!.Count != 0)
-        //     game.Platforms = await this._platformService.FindByIds(createGameDto.PlatformIds!);
+        // https://learn.microsoft.com/it-it/dotnet/fundamentals/code-analysis/quality-rules/ca1860
+        if(createGameDto.PlatformIds!.Count != 0)
+            game.Platforms = (await this._platformService.FindByIds(createGameDto.PlatformIds!)).ToList();
 
         await this._gameRepository.Create(game);
 
@@ -45,8 +46,10 @@ public class GameService : IGameService {
         if(game is null)
             return null;
 
-        // TODO debug: sovrascrive i campi mancanti con NULL
         Game updatedGame = _mapper.Map(updateGameDto, game);
+
+        if(updateGameDto.PlatformIds!.Count != 0)
+            game.Platforms = (await this._platformService.FindByIds(updateGameDto.PlatformIds!)).ToList();
 
         await this._gameRepository.Update(updatedGame);
 

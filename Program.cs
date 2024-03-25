@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using GamesAPI.Core.Middleware;
 using Serilog;
+using GamesAPI.Core.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -62,25 +63,33 @@ builder.Services
     .AddScoped<IAuthorizationHandler, IsReviewerUserHandler>()
 ;
 
-    builder.Services
-        .AddScoped<IPlatformService, PlatformService>()
-        .AddScoped<ICategoryService, CategoryService>()
-        .AddScoped<IGameService, GameService>()
-        .AddScoped<IReviewService, ReviewService>()
-        .AddScoped<ISoftwareHouseService, SoftwareHouseService>()
-        .AddScoped<IGamePlatformService, GamePlatformService>()
-        .AddScoped<IDeveloperService, DeveloperService>()
-    ;
+builder.Services
+    .AddScoped<IUserService, UserService>()
+;
 
-    builder.Services
-        .AddScoped<IPlatformRepository, PlatformRepository>()
-        .AddScoped<ICategoryRepository, CategoryRepository>()
-        .AddScoped<IGameRepository, GameRepository>()
-        .AddScoped<IReviewRepository, ReviewRepository>()
-        .AddScoped<ISoftwareHouseRepository, SoftwareHouseRepository>()
-        .AddScoped<IGamePlatformRepository, GamePlatformRepository>()
-        .AddScoped<IDeveloperRepository, DeveloperRepository>()
-    ;
+builder.Services
+    .AddScoped<IPlatformService, PlatformService>()
+    .AddScoped<ICategoryService, CategoryService>()
+    .AddScoped<IGameService, GameService>()
+    .AddScoped<IReviewService, ReviewService>()
+    .AddScoped<ISoftwareHouseService, SoftwareHouseService>()
+    .AddScoped<IGamePlatformService, GamePlatformService>()
+    .AddScoped<IDeveloperService, DeveloperService>()
+;
+
+builder.Services
+    .AddScoped<IUserRepository, UserRepository>()
+;
+
+builder.Services
+    .AddScoped<IPlatformRepository, PlatformRepository>()
+    .AddScoped<ICategoryRepository, CategoryRepository>()
+    .AddScoped<IGameRepository, GameRepository>()
+    .AddScoped<IReviewRepository, ReviewRepository>()
+    .AddScoped<ISoftwareHouseRepository, SoftwareHouseRepository>()
+    .AddScoped<IGamePlatformRepository, GamePlatformRepository>()
+    .AddScoped<IDeveloperRepository, DeveloperRepository>()
+;
 
 builder.Services.AddAutoMapper(typeof(Program));
 

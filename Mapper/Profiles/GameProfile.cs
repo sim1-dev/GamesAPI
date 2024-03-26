@@ -15,6 +15,15 @@ class GameProfile : Profile {
             ));
         ;
 
+        CreateMap<Game, UpdateGameDto>()
+            .ForAllMembers(opts => opts.Condition((game, updateGameDto, srcMember) => 
+                srcMember != null
+                && srcMember.ToString() != "0"
+                && srcMember.ToString() != new DateTime().ToString()
+                && srcMember.ToString() != new List<int>().ToString()
+            ));
+        ;
+
         CreateMap<Game, GameDto>()
             .ForMember(gameDto => gameDto.SoftwareHouseDto, option => option.MapFrom(game => game.SoftwareHouse))
             .ForMember(gameDetailDto => gameDetailDto.CategoryDto, option => option.MapFrom(game => game.Category))

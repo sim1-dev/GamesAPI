@@ -5,6 +5,8 @@ using GamesAPI.Dtos;
 using Microsoft.AspNetCore.Authorization;
 using GamesAPI.Services;
 using GamesAPI.Models;
+using Microsoft.AspNetCore.StaticFiles;
+using GamesAPI.Core.Services;
 
 namespace GamesAPI.Controllers;
 
@@ -14,19 +16,18 @@ public class GameController : ControllerBase
 {
     private readonly IMapper _mapper;
     private readonly IGameService _gameService;
+    private readonly IFileService _fileService;
 
-    public GameController(IGameService gameService, IMapper mapper) {
+    public GameController(IGameService gameService, IMapper mapper, IFileService fileService) {
         this._gameService = gameService;
         this._mapper = mapper;
+        this._fileService = fileService;
     }
     
     [AllowAnonymous]
 	[HttpGet]
     public async Task<ActionResult<Collection<GameDto>>> Get() {
         List<Game>? games = (await this._gameService.GetAll()).ToList();
-
-        if(games is null)
-            return NotFound();
 
         List<GameDto> gameDtos = _mapper.Map<List<GameDto>>(games);
 
@@ -84,5 +85,38 @@ public class GameController : ControllerBase
             return NotFound();
 
         return Ok();
+    }
+
+    [HttpPatch("{id}/cover-image")]
+    public async Task<IActionResult> UploadCoverImage(IFormFile file, int id) {
+        if (file == null || file.Length == 0)
+            return BadRequest();
+
+        Game? game = await this._gameService.Find(id);
+
+        if(game is null)
+            return NotFound();
+
+
+        Game? updatedGame = await this._gameService.UpdateImage(game, file);
+
+        if(updatedGame is null)
+            return StatusCode(500, "An error has occurred while updating. Please contact the system administrator");
+
+        GameDto gameDto = _mapper.Map<GameDto>(updatedGame);
+
+        return Ok(gameDto);
+    }
+
+    [HttpGet("{id}/cover-image")]
+    public async Task<IActionResult> DownloadCoverImage(int id) {
+        Game? game = await this._gameService.Find(id);
+
+        if(game is null || game.ImageUrl is null)
+            return NotFound();
+
+        FileContents fileContents = this._fileService.Download(game.ImageUrl);
+
+        return File(fileContents.Bytes, fileContents.MimeType, fileContents.FileName);
     }
 }

@@ -13,6 +13,7 @@ using GamesAPI.Core.Middleware;
 using Serilog;
 using GamesAPI.Core.Repositories;
 using Asp.Versioning;
+using Microsoft.AspNetCore.StaticFiles;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -53,6 +54,8 @@ builder.Services
 
 builder.Services
     .AddSingleton<PasswordHasher<User>>()
+    .AddSingleton<IContentTypeProvider, FileExtensionContentTypeProvider>()
+    .AddSingleton<IFileService, FileService>()
 ;
 
 builder.Services

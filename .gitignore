@@ -5,6 +5,9 @@ project.lock.json
 *.pyc
 nupkg/
 
+# Public folder
+Public/
+
 # Application Logs
 *.log
 

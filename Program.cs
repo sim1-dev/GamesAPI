@@ -12,6 +12,7 @@ using Microsoft.OpenApi.Models;
 using GamesAPI.Core.Middleware;
 using Serilog;
 using GamesAPI.Core.Repositories;
+using Asp.Versioning;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -100,8 +101,20 @@ builder.Services
 
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
+builder.Services
+    .AddApiVersioning(options => {
+        options.DefaultApiVersion = new ApiVersion(1);
+        options.AssumeDefaultVersionWhenUnspecified = true;
+        options.ReportApiVersions = true;
+    })
+    .AddApiExplorer(options => {
+        options.GroupNameFormat = "'v'VVV";
+        options.SubstituteApiVersionInUrl = true;
+    })
+;
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
+//builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen(option => {
     option.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme {

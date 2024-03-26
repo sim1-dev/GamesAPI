@@ -69,6 +69,7 @@ builder.Services
 
 builder.Services
     .AddScoped<IUserService, UserService>()
+    .AddScoped(typeof(IExcelExportService<>), typeof(ExcelExportService<>))
 ;
 
 builder.Services

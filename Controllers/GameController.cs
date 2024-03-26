@@ -5,7 +5,6 @@ using GamesAPI.Dtos;
 using Microsoft.AspNetCore.Authorization;
 using GamesAPI.Services;
 using GamesAPI.Models;
-using Microsoft.AspNetCore.StaticFiles;
 using GamesAPI.Core.Services;
 
 namespace GamesAPI.Controllers;
@@ -17,11 +16,13 @@ public class GameController : ControllerBase
     private readonly IMapper _mapper;
     private readonly IGameService _gameService;
     private readonly IFileService _fileService;
+    private readonly IExcelExportService<ExportGameDto> _excelExportService;
 
-    public GameController(IGameService gameService, IMapper mapper, IFileService fileService) {
+    public GameController(IGameService gameService, IMapper mapper, IFileService fileService, IExcelExportService<ExportGameDto> excelExportService) {
         this._gameService = gameService;
         this._mapper = mapper;
         this._fileService = fileService;
+        this._excelExportService = excelExportService;
     }
     
     [AllowAnonymous]
@@ -116,6 +117,20 @@ public class GameController : ControllerBase
             return NotFound();
 
         FileContents fileContents = this._fileService.Download(game.ImageUrl);
+
+        return File(fileContents.Bytes, fileContents.MimeType, fileContents.FileName);
+    }
+
+    [HttpPost("export/excel")]
+    public async Task<IActionResult> ExportToExcel([FromBody] string fileName = "games.xlsx") {
+        List<Game> games = (await this._gameService.GetAll()).ToList();
+
+        if(games is null)
+            return NotFound();
+
+        List<ExportGameDto> exportGameDtos = _mapper.Map<List<ExportGameDto>>(games);
+
+        FileContents fileContents = this._excelExportService.Export(exportGameDtos, fileName);
 
         return File(fileContents.Bytes, fileContents.MimeType, fileContents.FileName);
     }

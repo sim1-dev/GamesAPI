@@ -2,6 +2,7 @@ using AutoMapper;
 using GamesAPI.Models;
 using GamesAPI.Repositories;
 using GamesAPI.Dtos;
+using GamesAPI.Core.Models;
 
 namespace GamesAPI.Services;
 
@@ -15,8 +16,8 @@ public class SoftwareHouseService : ISoftwareHouseService {
         this._mapper = mapper;
     }
 
-    public async Task<IEnumerable<SoftwareHouse>> GetAll() {
-        IEnumerable<SoftwareHouse> softwareHouses = await this._softwareHouseRepository.GetAll();
+    public async Task<IEnumerable<SoftwareHouse>> Get(RequestFilter[]? filters) {
+        IEnumerable<SoftwareHouse> softwareHouses = await this._softwareHouseRepository.Get(filters);
 
         return softwareHouses;
     }

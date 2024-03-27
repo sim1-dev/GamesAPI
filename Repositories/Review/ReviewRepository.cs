@@ -1,20 +1,29 @@
 using GamesAPI.Core.DataContexts;
+using GamesAPI.Core.Models;
 using GamesAPI.Models;
 using Microsoft.EntityFrameworkCore;
+using StandardizedFilters.Core.Services.Request;
 
 namespace GamesAPI.Repositories;
 public class ReviewRepository : IReviewRepository {
+    private readonly IRepositoryHelper<Review> _repositoryHelper;
     private readonly BaseContext _db;
-    public ReviewRepository(BaseContext db) {
+    public ReviewRepository(BaseContext db, IRepositoryHelper<Review> repositoryHelper) {
         this._db = db;
+        this._repositoryHelper = repositoryHelper;
     }
 
-    public async Task<IEnumerable<Review>> GetAll() {
-        return await _db.Reviews
+    public async Task<IEnumerable<Review>> Get(RequestFilter[]? filters) {
+        IQueryable<Review> reviewsQuery = _db.Reviews
             .Include(review => review.ReviewerUser)
             .Include(review => review.Game)
-        .ToListAsync();
+        ;
+
+        reviewsQuery = _repositoryHelper.ApplyFilters(reviewsQuery, filters);
+        
+        return await reviewsQuery.ToListAsync();
     }
+    
 
     public async Task<Review?> Find(int id) {
         Review? review = await _db.Reviews

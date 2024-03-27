@@ -4,8 +4,9 @@ using AutoMapper;
 using GamesAPI.Dtos;
 using Microsoft.AspNetCore.Authorization;
 using GamesAPI.Services;
-using GamesAPI.Models;
 using GamesAPI.Core.Services;
+using GamesAPI.Models;
+using GamesAPI.Core.Models;
 
 namespace GamesAPI.Controllers;
 
@@ -27,8 +28,8 @@ public class GameController : ControllerBase
     
     [AllowAnonymous]
 	[HttpGet]
-    public async Task<ActionResult<Collection<GameDto>>> Get() {
-        List<Game>? games = (await this._gameService.GetAll()).ToList();
+    public async Task<ActionResult<Collection<GameDto>>> Get([FromQuery] RequestFilter[]? filters = null) {
+        List<Game>? games = (await this._gameService.Get(filters)).ToList();
 
         List<GameDto> gameDtos = _mapper.Map<List<GameDto>>(games);
 
@@ -123,7 +124,7 @@ public class GameController : ControllerBase
 
     [HttpPost("export/excel")]
     public async Task<IActionResult> ExportToExcel([FromBody] string fileName = "games.xlsx") {
-        List<Game> games = (await this._gameService.GetAll()).ToList();
+        List<Game> games = (await this._gameService.Get(null)).ToList();
 
         if(games is null)
             return NotFound();

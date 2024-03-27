@@ -2,21 +2,26 @@ using GamesAPI.Core.DataContexts;
 using GamesAPI.Core.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using StandardizedFilters.Core.Services.Request;
 
 namespace GamesAPI.Core.Repositories;
 
 public class UserRepository : IUserRepository {
+    private readonly IRepositoryHelper<User> _repositoryHelper;
     private readonly UserManager<User> _userManager;
     private readonly BaseContext _db;
-    public UserRepository(UserManager<User> userManager, BaseContext db) {
+    public UserRepository(UserManager<User> userManager, BaseContext db, IRepositoryHelper<User> repositoryHelper) {
         this._userManager = userManager;
         this._db = db;
+        this._repositoryHelper = repositoryHelper;
     }
 
-    public async Task<IEnumerable<User>> GetAll() {
-        IEnumerable<User> users = await _db.Users.ToListAsync();
+    public async Task<IEnumerable<User>> Get(RequestFilter[]? filters) {
+        IQueryable<User> usersQuery = _db.Users;
 
-        return users;
+        usersQuery = _repositoryHelper.ApplyFilters(usersQuery, filters);
+
+        return await usersQuery.ToListAsync();
     }
 
     public async Task<User?> Find(int id) {

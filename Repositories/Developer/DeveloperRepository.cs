@@ -1,16 +1,25 @@
 using GamesAPI.Core.DataContexts;
+using GamesAPI.Core.Models;
 using GamesAPI.Models;
 using Microsoft.EntityFrameworkCore;
+using StandardizedFilters.Core.Services.Request;
 
 namespace GamesAPI.Repositories;
 public class DeveloperRepository : IDeveloperRepository {
     private readonly BaseContext _db;
-    public DeveloperRepository(BaseContext db) {
+    private readonly IRepositoryHelper<Developer> _repositoryHelper;
+
+    public DeveloperRepository(BaseContext db, IRepositoryHelper<Developer> repositoryHelper) {
         this._db = db;
+        this._repositoryHelper = repositoryHelper;
     }
 
-    public async Task<IEnumerable<Developer>> GetAll() {
-        return await _db.Developers.ToListAsync();
+    public async Task<IEnumerable<Developer>> Get(RequestFilter[]? filters) {
+        IQueryable<Developer> developersQuery = _db.Developers;
+
+        developersQuery = this._repositoryHelper.ApplyFilters(developersQuery, filters);
+
+        return await developersQuery.ToListAsync();
     }
 
     public async Task<IEnumerable<Developer>> GetByUserId(int userId) {

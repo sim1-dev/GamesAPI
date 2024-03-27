@@ -2,6 +2,7 @@ using AutoMapper;
 using GamesAPI.Models;
 using GamesAPI.Repositories;
 using GamesAPI.Dtos;
+using GamesAPI.Core.Models;
 
 namespace GamesAPI.Services;
 
@@ -14,8 +15,8 @@ public class DeveloperService : IDeveloperService {
         this._mapper = mapper;
     }
 
-    public async Task<IEnumerable<Developer>> GetAll() {
-        IEnumerable<Developer> developers = await this._developerRepository.GetAll();
+    public async Task<IEnumerable<Developer>> Get(RequestFilter[]? filters) {
+        IEnumerable<Developer> developers = await this._developerRepository.Get(filters);
         return developers;
     }
 

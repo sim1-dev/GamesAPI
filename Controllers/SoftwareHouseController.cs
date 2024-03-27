@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using GamesAPI.Models;
 using GamesAPI.Dtos;
 using GamesAPI.Services;
+using GamesAPI.Core.Models;
 
 namespace GamesAPI.Controllers;
 
@@ -22,8 +23,8 @@ public class SoftwareHouseController : ControllerBase
     
     [AllowAnonymous]
 	[HttpGet]
-    public async Task<ActionResult<Collection<SoftwareHouseDto>>> Get() {
-        List<SoftwareHouse>? softwareHouses = (await this._softwareHouseService.GetAll()).ToList();
+    public async Task<ActionResult<Collection<SoftwareHouseDto>>> Get([FromQuery] RequestFilter[]? filters = null) {
+        List<SoftwareHouse>? softwareHouses = (await this._softwareHouseService.Get(filters)).ToList();
 
         List<SoftwareHouseDto> softwareHouseDtos = _mapper.Map<List<SoftwareHouseDto>>(softwareHouses);
 

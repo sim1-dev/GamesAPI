@@ -62,7 +62,7 @@ Start the server
 - [@sim1-dev](https://github.com/sim1-dev) - Simone Tenisci
 
 
-## Buy [me](https://www.simonetenisci.it/) a coffee ☕
+## Buy [me](https://www.simonetenisci.net/) a coffee ☕
 
 [![alt text][image]][hyperlink]
 

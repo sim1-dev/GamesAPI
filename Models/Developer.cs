@@ -15,4 +15,6 @@ public class Developer {
 
     [Required]
     public SoftwareHouse SoftwareHouse { get; set; } = null!;
+
+    public int SoftwareHouseId { get; set; }
 }

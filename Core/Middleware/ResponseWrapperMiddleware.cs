@@ -9,7 +9,7 @@ public class ResponseWrapperMiddleware {
     }
 
     public async Task Invoke(HttpContext context) {
-        var originalBody = context.Response.Body;
+        Stream? originalBody = context.Response.Body;
         using (var memStream = new MemoryStream()) {
             context.Response.Body = memStream;
             await _next(context);
@@ -21,7 +21,7 @@ public class ResponseWrapperMiddleware {
                 context.Response.StatusCode >= 200 &&
                 context.Response.StatusCode < 300)
             {
-                var responseBody = await FormatResponse(memStream);
+                object? responseBody = await FormatResponse(memStream);
                 context.Response.ContentType = "application/json";
                 context.Response.Body = originalBody;
                 await context.Response.WriteAsync(JsonConvert.SerializeObject(new Response {   
@@ -36,8 +36,8 @@ public class ResponseWrapperMiddleware {
     }
 
     private async Task<object?> FormatResponse(Stream responseStream) {
-        using var reader = new StreamReader(responseStream);
-        var body = await reader.ReadToEndAsync();
+        using StreamReader reader = new StreamReader(responseStream);
+        string body = await reader.ReadToEndAsync();
         return JsonConvert.DeserializeObject(body);
     }
 }

@@ -2,6 +2,7 @@ using AutoMapper;
 using GamesAPI.Models;
 using GamesAPI.Repositories;
 using GamesAPI.Dtos;
+using GamesAPI.Core.Models;
 
 namespace GamesAPI.Services;
 
@@ -15,8 +16,8 @@ public class CategoryService : ICategoryService {
         this._mapper = mapper;
     }
 
-    public async Task<IEnumerable<Category>> GetAll() {
-        IEnumerable<Category> categories = await this._categoryRepository.GetAll();
+    public async Task<IEnumerable<Category>> Get(RequestFilter[]? filters) {
+        IEnumerable<Category> categories = await this._categoryRepository.Get(filters);
         return categories;
     }
     

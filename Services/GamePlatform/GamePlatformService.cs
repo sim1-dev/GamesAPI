@@ -1,40 +1,46 @@
-using GamesAPI.Core.DataContexts;
 using GamesAPI.Models;
+using GamesAPI.Repositories;
 
 namespace GamesAPI.Services;
 
-public class GamePlatformService {
+public class GamePlatformService : IGamePlatformService {
 
-    private readonly BaseContext _db;
-    private readonly GameService _gameService;
+    private readonly IGamePlatformRepository _gamePlatformRepository;
 
-    public GamePlatformService(BaseContext db, GameService gameService) {
-       this._db = db;
-       this._gameService = gameService;
+    public GamePlatformService(IGamePlatformRepository gamePlatformRepository) {
+       this._gamePlatformRepository = gamePlatformRepository;
     }
 
-    // TODO rewrite
+    public async Task<GamePlatform> Create(int gameId, int platformId) {
+        GamePlatform gamePlatform = new GamePlatform() {
+            GameId = gameId,
+            PlatformId = platformId
+        };
+        
+        await this._gamePlatformRepository.Create(gamePlatform);
 
-    // public async Task<Game?> AddPlatformToGame(Game game, Platform platform) {
-    //     if(game.Platforms.Contains(platform))
-    //         return game;
+        return gamePlatform;
+    }
 
-    //     game.Platforms.Add(platform);
+    public async Task<bool> DeleteForGame(int gameId) {
+        IEnumerable<GamePlatform> gamePlatforms = await this._gamePlatformRepository.GetForGame(gameId);
 
-    //     Game? updatedGame = await this._gameService.Update(game.Id, game);
+        if(gamePlatforms is null)
+            return false;
 
-    //     return updatedGame;
-    // }
+        await this._gamePlatformRepository.DeleteRange(gamePlatforms);
 
-    // public async Task<Game?> RemovePlatformToGame(Game game, Platform platform) {
-    //     if(!game.Platforms.Contains(platform))
-    //         return game;
+        return true;
+    }
 
-    //     game.Platforms.Remove(platform);
+    public async Task<bool> DeleteForPlatform(int platformId) {
+        IEnumerable<GamePlatform> gamePlatforms = await this._gamePlatformRepository.GetForPlatform(platformId);
 
-    //     Game? updatedGame = await this._gameService.Update(game.Id, game);
+        if(gamePlatforms is null)
+            return false;
 
-    //     return updatedGame;
-    // }
+        await this._gamePlatformRepository.DeleteRange(gamePlatforms);
 
+        return true;
+    }
 }

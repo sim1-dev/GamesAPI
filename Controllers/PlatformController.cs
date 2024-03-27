@@ -5,11 +5,12 @@ using Microsoft.AspNetCore.Authorization;
 using GamesAPI.Dtos;
 using GamesAPI.Services;
 using GamesAPI.Models;
+using GamesAPI.Core.Models;
 
 namespace PlatformsAPI.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/[controller]s")]
 public class PlatformController : ControllerBase
 {
     private readonly IMapper _mapper;
@@ -22,8 +23,8 @@ public class PlatformController : ControllerBase
     
     [AllowAnonymous]
 	[HttpGet]
-    public async Task<ActionResult<Collection<PlatformDto>>> Get() {
-        List<Platform>? platforms = (await this._platformService.GetAll()).ToList();
+    public async Task<ActionResult<Collection<PlatformDto>>> Get([FromQuery] RequestFilter[]? filters = null) {
+        List<Platform>? platforms = (await this._platformService.Get(filters)).ToList();
 
         if(platforms is null)
             return NotFound();

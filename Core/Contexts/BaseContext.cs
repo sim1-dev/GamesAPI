@@ -30,8 +30,15 @@ public class BaseContext : IdentityDbContext<User, Role, int> {
     public DbSet<Game> Games {get; set;}
     public DbSet<Review> Reviews {get; set;}
 
+    public DbSet<GamePlatform> GamePlatforms {get; set;}
+
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<Game>()
+            .HasMany(game => game.Platforms)
+            .WithMany(platform => platform.Games)
+            .UsingEntity<GamePlatform>();
 
         seed(modelBuilder);
     }
@@ -193,17 +200,17 @@ public class BaseContext : IdentityDbContext<User, Role, int> {
                 ReleaseDate = new DateTime(2020, 08, 11), 
                 Price = 59.99M,
                 CategoryId = 2, 
-                SoftwareHouseId = 8 
+                SoftwareHouseId = 8
             }
         );
     }
 
     public void seedGamePlatforms(ModelBuilder modelBuilder) {
-        modelBuilder.Entity("GamePlatform").HasData(
-            new { GamesId = 1, PlatformsId = 1 },
-            new { GamesId = 1, PlatformsId = 2 },
-            new { GamesId = 1, PlatformsId = 4 },
-            new { GamesId = 2, PlatformsId = 4 }
+        modelBuilder.Entity<GamePlatform>().HasData(
+            new { GameId = 1, PlatformId = 1 },
+            new { GameId = 1, PlatformId = 2 },
+            new { GameId = 1, PlatformId = 4 },
+            new { GameId = 2, PlatformId = 4 }
         );
     }
 

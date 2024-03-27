@@ -19,335 +19,6 @@ namespace GamesAPI.Migrations
                 .HasAnnotation("ProductVersion", "8.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("GamePlatform", b =>
-                {
-                    b.Property<int>("GamesId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PlatformsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("GamesId", "PlatformsId");
-
-                    b.HasIndex("PlatformsId");
-
-                    b.ToTable("GamePlatform");
-
-                    b.HasData(
-                        new
-                        {
-                            GamesId = 1,
-                            PlatformsId = 1
-                        },
-                        new
-                        {
-                            GamesId = 1,
-                            PlatformsId = 2
-                        },
-                        new
-                        {
-                            GamesId = 1,
-                            PlatformsId = 4
-                        },
-                        new
-                        {
-                            GamesId = 2,
-                            PlatformsId = 4
-                        });
-                });
-
-            modelBuilder.Entity("GamesAPI.Core.Models.Category", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Categories");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Action"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Adventure"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "RPG"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Name = "Shooter"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Name = "Simulation"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Name = "Sports"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Name = "Strategy"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Name = "Puzzle"
-                        },
-                        new
-                        {
-                            Id = 9,
-                            Name = "Racing"
-                        },
-                        new
-                        {
-                            Id = 10,
-                            Name = "Fighting"
-                        },
-                        new
-                        {
-                            Id = 11,
-                            Name = "Arcade"
-                        },
-                        new
-                        {
-                            Id = 12,
-                            Name = "Platformer"
-                        });
-                });
-
-            modelBuilder.Entity("GamesAPI.Core.Models.Developer", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int>("SoftwareHouseId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SoftwareHouseId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Developers");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            SoftwareHouseId = 1,
-                            UserId = 1,
-                            Username = "sim1-dev"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            SoftwareHouseId = 1,
-                            UserId = 2,
-                            Username = "andreasssss"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            SoftwareHouseId = 2,
-                            UserId = 3,
-                            Username = "johnSmith15"
-                        });
-                });
-
-            modelBuilder.Entity("GamesAPI.Core.Models.Game", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("ImageUrl")
-                        .HasColumnType("longtext");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(65,30)");
-
-                    b.Property<DateTime>("ReleaseDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int>("SoftwareHouseId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CategoryId");
-
-                    b.HasIndex("SoftwareHouseId");
-
-                    b.ToTable("Games");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CategoryId = 1,
-                            Description = "Developed by the creators of Grand Theft Auto V and Red Dead Redemption, Red Dead Redemption 2 is an epic tale of life in America's unforgiving heartland.",
-                            Price = 79.99m,
-                            ReleaseDate = new DateTime(2018, 10, 26, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            SoftwareHouseId = 1,
-                            Title = "Red Dead Redemption 2"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CategoryId = 2,
-                            Description = "The Last of Us Part II is a 2020 action-adventure game developed by Naughty Dog and published by Sony Interactive Entertainment.",
-                            Price = 59.99m,
-                            ReleaseDate = new DateTime(2020, 8, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            SoftwareHouseId = 8,
-                            Title = "The Last of Us Part II"
-                        });
-                });
-
-            modelBuilder.Entity("GamesAPI.Core.Models.Platform", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Platforms");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Windows"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Linux"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "MacOS"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Name = "Playstation 5"
-                        });
-                });
-
-            modelBuilder.Entity("GamesAPI.Core.Models.Review", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("Comment")
-                        .HasMaxLength(500)
-                        .HasColumnType("varchar(500)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int>("GameId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Score")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int")
-                        .HasColumnName("ReviewerUserId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("GameId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Reviews");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Comment = "This game is awesome!",
-                            CreatedAt = new DateTime(2024, 3, 4, 17, 52, 30, 152, DateTimeKind.Local).AddTicks(8437),
-                            GameId = 1,
-                            Score = 9,
-                            UserId = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Comment = "Pretty good game, but gets boring after the main questline",
-                            CreatedAt = new DateTime(2024, 3, 4, 17, 52, 30, 152, DateTimeKind.Local).AddTicks(8496),
-                            GameId = 1,
-                            Score = 7,
-                            UserId = 2
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Comment = "I loved this game!",
-                            CreatedAt = new DateTime(2024, 3, 4, 17, 52, 30, 152, DateTimeKind.Local).AddTicks(8614),
-                            GameId = 2,
-                            Score = 10,
-                            UserId = 1
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Comment = "I didn't like this game at all...",
-                            CreatedAt = new DateTime(2024, 3, 4, 17, 52, 30, 152, DateTimeKind.Local).AddTicks(8616),
-                            GameId = 1,
-                            Score = 1,
-                            UserId = 2
-                        });
-                });
-
             modelBuilder.Entity("GamesAPI.Core.Models.Role", b =>
                 {
                     b.Property<int>("Id")
@@ -386,68 +57,6 @@ namespace GamesAPI.Migrations
                             Id = 2,
                             Name = "User",
                             NormalizedName = "USER"
-                        });
-                });
-
-            modelBuilder.Entity("GamesAPI.Core.Models.SoftwareHouse", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("SoftwareHouses");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Rockstar Games"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Ubisoft"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "Activision"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Name = "EA"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Name = "Nintendo"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Name = "Square Enix"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Name = "Bethesda"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Name = "Sony"
-                        },
-                        new
-                        {
-                            Id = 9,
-                            Name = "Microsoft"
                         });
                 });
 
@@ -531,7 +140,7 @@ namespace GamesAPI.Migrations
                         {
                             Id = 1,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "87f3c342-5d69-4d40-bda8-c8e2a2c20c45",
+                            ConcurrencyStamp = "60c03682-e48a-41ed-a5cd-e9e5cdb742bb",
                             Email = "admin@rockstargames.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",
@@ -539,9 +148,9 @@ namespace GamesAPI.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@ROCKSTARGAMES.COM",
                             NormalizedUserName = "ADMIN@ROCKSTARGAMES.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEG1B34aDYvLUU7tEKUlLns2yDUsKteYOuM81r4NfxMNl94LM19vzJxyRil5UkhN6dg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAECwCbaouZV0HCQJnSFBV6bb+JVofKyzktPKARY2+5GYuo+rgI5qP53Cf6eoZyO1Fwg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "c7273cab-5202-445e-aca4-7ac5efe45b4c",
+                            SecurityStamp = "fcca7553-5e81-46ef-98bc-3425481c67e3",
                             TwoFactorEnabled = false,
                             UserName = "admin@rockstargames.com"
                         },
@@ -549,7 +158,7 @@ namespace GamesAPI.Migrations
                         {
                             Id = 2,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "0dfca3a7-34ad-49d7-b422-63c4a7572fbb",
+                            ConcurrencyStamp = "7eed25b4-3ad4-41d7-98da-142c41ebb7a0",
                             Email = "and.rea@rockstargames.com",
                             EmailConfirmed = true,
                             FirstName = "Andrea",
@@ -557,9 +166,9 @@ namespace GamesAPI.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "AND.REA@ROCKSTARGAMES.COM",
                             NormalizedUserName = "AND.REA@ROCKSTARGAMES.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEOr4d3fTVmnsALgCbQpLMVjn0w0sBSyp0k/rjSXYv5mQDPDSxP7Kcwfx/zROCMolQA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGI1jPD0SFxLKJg4tmotdSTBlcya87071m8KiaUqYpuSjQLM7YJHvw1IQGS1l0Thgw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "a144c0b2-f0a5-43d7-98d0-5397a1622b97",
+                            SecurityStamp = "776573ad-1cf5-4079-8b64-ef48df83aba0",
                             TwoFactorEnabled = false,
                             UserName = "and.rea@rockstargames.com"
                         },
@@ -567,7 +176,7 @@ namespace GamesAPI.Migrations
                         {
                             Id = 3,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "eed13eda-da9f-4671-b49b-91037057139b",
+                            ConcurrencyStamp = "09053630-c6e5-43dd-a36e-efe00bdb436d",
                             Email = "john.smith@ubisoft.com",
                             EmailConfirmed = true,
                             FirstName = "John",
@@ -575,11 +184,402 @@ namespace GamesAPI.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "JOHN.SMITH@UBISOFT.COM",
                             NormalizedUserName = "JOHN.SMITH@UBISOFT.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEF5knrQMsflLEpb9QVfqWsLPlQRicjWoN6vdlaGm3Mc4l8fzwRmqNfL0L407+c+rRA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEFlrcxQNZARHssdB6oQ4kSu6jmEt1j6rGRKdPh9vdcDJW1loBB2JZjpknIFeQspSRQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "52c4a5f1-28bf-463f-910b-a341c0363144",
+                            SecurityStamp = "fba8106a-dd04-43a5-a61e-645e372d0c91",
                             TwoFactorEnabled = false,
                             UserName = "john.smith@ubisoft.com"
+                        });
+                });
+
+            modelBuilder.Entity("GamesAPI.Models.Category", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Action"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Adventure"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "RPG"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Shooter"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Simulation"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "Sports"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Name = "Strategy"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Name = "Puzzle"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Name = "Racing"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Name = "Fighting"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Name = "Arcade"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Name = "Platformer"
+                        });
+                });
+
+            modelBuilder.Entity("GamesAPI.Models.Developer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("SoftwareHouseId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SoftwareHouseId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Developers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            SoftwareHouseId = 1,
+                            UserId = 1,
+                            Username = "sim1-dev"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            SoftwareHouseId = 1,
+                            UserId = 2,
+                            Username = "andreasssss"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            SoftwareHouseId = 2,
+                            UserId = 3,
+                            Username = "johnSmith15"
+                        });
+                });
+
+            modelBuilder.Entity("GamesAPI.Models.Game", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("longtext");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<DateTime>("ReleaseDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("SoftwareHouseId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("SoftwareHouseId");
+
+                    b.ToTable("Games");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CategoryId = 1,
+                            Description = "Developed by the creators of Grand Theft Auto V and Red Dead Redemption, Red Dead Redemption 2 is an epic tale of life in America's unforgiving heartland.",
+                            Price = 79.99m,
+                            ReleaseDate = new DateTime(2018, 10, 26, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            SoftwareHouseId = 1,
+                            Title = "Red Dead Redemption 2"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CategoryId = 2,
+                            Description = "The Last of Us Part II is a 2020 action-adventure game developed by Naughty Dog and published by Sony Interactive Entertainment.",
+                            Price = 59.99m,
+                            ReleaseDate = new DateTime(2020, 8, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            SoftwareHouseId = 8,
+                            Title = "The Last of Us Part II"
+                        });
+                });
+
+            modelBuilder.Entity("GamesAPI.Models.GamePlatform", b =>
+                {
+                    b.Property<int>("GameId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PlatformId")
+                        .HasColumnType("int");
+
+                    b.HasKey("GameId", "PlatformId");
+
+                    b.HasIndex("PlatformId");
+
+                    b.ToTable("gameplatforms");
+
+                    b.HasData(
+                        new
+                        {
+                            GameId = 1,
+                            PlatformId = 1
+                        },
+                        new
+                        {
+                            GameId = 1,
+                            PlatformId = 2
+                        },
+                        new
+                        {
+                            GameId = 1,
+                            PlatformId = 4
+                        },
+                        new
+                        {
+                            GameId = 2,
+                            PlatformId = 4
+                        });
+                });
+
+            modelBuilder.Entity("GamesAPI.Models.Platform", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Platforms");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Windows"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Linux"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "MacOS"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Playstation 5"
+                        });
+                });
+
+            modelBuilder.Entity("GamesAPI.Models.Review", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Comment")
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("GameId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Score")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int")
+                        .HasColumnName("ReviewerUserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GameId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Reviews");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Comment = "This game is awesome!",
+                            CreatedAt = new DateTime(2024, 3, 25, 11, 46, 1, 231, DateTimeKind.Local).AddTicks(5900),
+                            GameId = 1,
+                            Score = 9,
+                            UserId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Comment = "Pretty good game, but gets boring after the main questline",
+                            CreatedAt = new DateTime(2024, 3, 25, 11, 46, 1, 231, DateTimeKind.Local).AddTicks(6084),
+                            GameId = 1,
+                            Score = 7,
+                            UserId = 2
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Comment = "I loved this game!",
+                            CreatedAt = new DateTime(2024, 3, 25, 11, 46, 1, 231, DateTimeKind.Local).AddTicks(6089),
+                            GameId = 2,
+                            Score = 10,
+                            UserId = 1
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Comment = "I didn't like this game at all...",
+                            CreatedAt = new DateTime(2024, 3, 25, 11, 46, 1, 231, DateTimeKind.Local).AddTicks(6092),
+                            GameId = 1,
+                            Score = 1,
+                            UserId = 2
+                        });
+                });
+
+            modelBuilder.Entity("GamesAPI.Models.SoftwareHouse", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SoftwareHouses");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Rockstar Games"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Ubisoft"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Activision"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "EA"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Nintendo"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "Square Enix"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Name = "Bethesda"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Name = "Sony"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Name = "Microsoft"
                         });
                 });
 
@@ -699,24 +699,16 @@ namespace GamesAPI.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("GamePlatform", b =>
+            modelBuilder.Entity("GamesAPI.Core.Models.User", b =>
                 {
-                    b.HasOne("GamesAPI.Core.Models.Game", null)
-                        .WithMany()
-                        .HasForeignKey("GamesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("GamesAPI.Core.Models.Platform", null)
-                        .WithMany()
-                        .HasForeignKey("PlatformsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("GamesAPI.Core.Models.Role", null)
+                        .WithMany("Users")
+                        .HasForeignKey("RoleId");
                 });
 
-            modelBuilder.Entity("GamesAPI.Core.Models.Developer", b =>
+            modelBuilder.Entity("GamesAPI.Models.Developer", b =>
                 {
-                    b.HasOne("GamesAPI.Core.Models.SoftwareHouse", "SoftwareHouse")
+                    b.HasOne("GamesAPI.Models.SoftwareHouse", "SoftwareHouse")
                         .WithMany("Developers")
                         .HasForeignKey("SoftwareHouseId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -733,15 +725,15 @@ namespace GamesAPI.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("GamesAPI.Core.Models.Game", b =>
+            modelBuilder.Entity("GamesAPI.Models.Game", b =>
                 {
-                    b.HasOne("GamesAPI.Core.Models.Category", "Category")
+                    b.HasOne("GamesAPI.Models.Category", "Category")
                         .WithMany("Games")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("GamesAPI.Core.Models.SoftwareHouse", "SoftwareHouse")
+                    b.HasOne("GamesAPI.Models.SoftwareHouse", "SoftwareHouse")
                         .WithMany("Games")
                         .HasForeignKey("SoftwareHouseId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -752,9 +744,24 @@ namespace GamesAPI.Migrations
                     b.Navigation("SoftwareHouse");
                 });
 
-            modelBuilder.Entity("GamesAPI.Core.Models.Review", b =>
+            modelBuilder.Entity("GamesAPI.Models.GamePlatform", b =>
                 {
-                    b.HasOne("GamesAPI.Core.Models.Game", null)
+                    b.HasOne("GamesAPI.Models.Game", null)
+                        .WithMany()
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GamesAPI.Models.Platform", null)
+                        .WithMany()
+                        .HasForeignKey("PlatformId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("GamesAPI.Models.Review", b =>
+                {
+                    b.HasOne("GamesAPI.Models.Game", "Game")
                         .WithMany("Reviews")
                         .HasForeignKey("GameId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -766,14 +773,9 @@ namespace GamesAPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ReviewerUser");
-                });
+                    b.Navigation("Game");
 
-            modelBuilder.Entity("GamesAPI.Core.Models.User", b =>
-                {
-                    b.HasOne("GamesAPI.Core.Models.Role", null)
-                        .WithMany("Users")
-                        .HasForeignKey("RoleId");
+                    b.Navigation("ReviewerUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -827,31 +829,31 @@ namespace GamesAPI.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("GamesAPI.Core.Models.Category", b =>
-                {
-                    b.Navigation("Games");
-                });
-
-            modelBuilder.Entity("GamesAPI.Core.Models.Game", b =>
-                {
-                    b.Navigation("Reviews");
-                });
-
             modelBuilder.Entity("GamesAPI.Core.Models.Role", b =>
                 {
                     b.Navigation("Users");
                 });
 
-            modelBuilder.Entity("GamesAPI.Core.Models.SoftwareHouse", b =>
+            modelBuilder.Entity("GamesAPI.Core.Models.User", b =>
+                {
+                    b.Navigation("DeveloperAccounts");
+                });
+
+            modelBuilder.Entity("GamesAPI.Models.Category", b =>
+                {
+                    b.Navigation("Games");
+                });
+
+            modelBuilder.Entity("GamesAPI.Models.Game", b =>
+                {
+                    b.Navigation("Reviews");
+                });
+
+            modelBuilder.Entity("GamesAPI.Models.SoftwareHouse", b =>
                 {
                     b.Navigation("Developers");
 
                     b.Navigation("Games");
-                });
-
-            modelBuilder.Entity("GamesAPI.Core.Models.User", b =>
-                {
-                    b.Navigation("DeveloperAccounts");
                 });
 #pragma warning restore 612, 618
         }

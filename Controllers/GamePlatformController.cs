@@ -1,71 +1,55 @@
 // TODO [refactor]
 
-// using Microsoft.AspNetCore.Mvc;
-// using GamesAPI.Models;
-// using AutoMapper;
-// using GamesAPI.Dtos;
-// using Microsoft.AspNetCore.Authorization;
-// using GamesAPI.Services;
+using Microsoft.AspNetCore.Mvc;
+using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using GamesAPI.Services;
+using GamesAPI.Models;
 
-// namespace GamesAPI.Controllers;
+namespace GamesAPI.Controllers;
 
-// [ApiController]
-// [Route("api/[controller]")]
-// public class GamePlatformController : ControllerBase
-// {
-//     private readonly IMapper _mapper;
+[ApiController]
+[Route("api/[controller]s")]
+public class GamePlatformController : ControllerBase
+{
+    private readonly IGamePlatformService _gamePlatformService;
 
-//     private readonly IGamePlatformService _gamePlatformService;
+    public GamePlatformController(IGamePlatformService gamePlatformService) {
+        this._gamePlatformService = gamePlatformService;
+    }
 
-//     public GamePlatformController(IMapper mapper, GamePlatformService gamePlatformService) {
-//         this._mapper = mapper;
-//         this._gamePlatformService = gamePlatformService;
-//     }
+    // [Authorize(Policy = "IsGameDeveloper")]
+    [HttpPost]
+    public async Task<ActionResult<GamePlatform>> Create(int gameId, int platformId) {
+        GamePlatform gamePlatform = await this._gamePlatformService.Create(gameId, platformId);
 
-    
-//     // [Authorize(Policy = "IsGameDeveloper")]
-//     // [HttpPut("/add")]
-//     // public async Task<ActionResult<GameDto>> AddPlatform([FromBody]int gameId, int platformId) {
-//     //     Game? game = await this._gameService.Find(gameId);
+        if(gamePlatform is null)
+            return StatusCode(500, "An error has occurred while creating. Please contact the system administrator");
 
-//     //     if(game is null)
-//     //         return NotFound("Game not found");
+        return Ok(gamePlatform);
+    }
 
-//     //     Platform? platform = await this._platformService.Find(platformId);
+    [Authorize(Policy = "IsGameDeveloper")]
+    [Route("game/{gameId}")]
+    [HttpDelete]
+    public async Task<ActionResult> DeleteAllPlatformsForGame(int gameId) {
+        bool isDeleted = await this._gamePlatformService.DeleteForGame(gameId);
 
-//     //     if(platform is null)
-//     //         return NotFound("Platform not found");
+        if(!isDeleted)
+            return NotFound();
 
-//     //     Game? updatedGame = await this._gamePlatformService.AddPlatformToGame(game, platform);
+        return Ok();
+    }
 
-//     //     if(updatedGame is null)
-//     //         return StatusCode(500, "An error has occurred while updating. Please contact the system administrator");
+    [Authorize(Roles = "Admin")]
+    [Route("platform/{platformId}")]
+    [HttpDelete]
+    public async Task<ActionResult> DeleteAllGamesForPlatform(int platformId) {
+        bool isDeleted = await this._gamePlatformService.DeleteForPlatform(platformId);
 
-//     //     GameDto updatedGameDto = _mapper.Map<GameDto>(updatedGame);
+        if(!isDeleted)
+            return NotFound();
 
-//     //     return updatedGameDto;
-//     // }
-
-//     // [Authorize(Policy = "IsGameDeveloper")]
-//     // [HttpPut("{gameId}/remove")]
-//     // public async Task<ActionResult<GameDto>> RemovePlatform(int gameId, [FromBody] int platformId) {
-//     //     Game? game = await this._gameService.Find(gameId);
-
-//     //     if(game is null)
-//     //         return NotFound("Game not found");
-
-//     //     Platform? platform = await this._platformService.Find(platformId);
-
-//     //     if(platform is null)
-//     //         return NotFound("Platform not found");
-
-//     //     Game? updatedGame = await this._gamePlatformService.RemovePlatformToGame(game, platform);
-
-//     //     if(updatedGame is null)
-//     //         return StatusCode(500, "An error has occurred while updating. Please contact the system administrator");
-
-//     //     GameDto updatedGameDto = _mapper.Map<GameDto>(updatedGame);
-
-//     //     return updatedGameDto;
-//     // }
-// }
+        return Ok();
+    }
+}

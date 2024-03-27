@@ -2,6 +2,7 @@ using AutoMapper;
 using GamesAPI.Models;
 using GamesAPI.Repositories;
 using GamesAPI.Dtos;
+using GamesAPI.Core.Models;
 
 namespace GamesAPI.Services;
 
@@ -15,8 +16,8 @@ public class PlatformService : IPlatformService {
         this._mapper = mapper;
     }
 
-    public async Task<IEnumerable<Platform>> GetAll() {
-        IEnumerable<Platform> platforms = await this._platformRepository.GetAll();
+    public async Task<IEnumerable<Platform>> Get(RequestFilter[]? filters) {
+        IEnumerable<Platform> platforms = await this._platformRepository.Get(filters);
         return platforms;
     }
     
@@ -30,6 +31,12 @@ public class PlatformService : IPlatformService {
         Platform? platform = await this._platformRepository.FindByName(name);
 
         return platform;
+    }
+
+    public async Task<IEnumerable<Platform>> FindByIds(List<int> ids) {
+        IEnumerable<Platform> platforms = await this._platformRepository.FindByIds(ids);
+        
+        return platforms;
     }
 
     public async Task<Platform> Create(CreatePlatformDto createPlatformDto) {

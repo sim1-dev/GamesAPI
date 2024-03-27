@@ -23,7 +23,7 @@ public class GamePlatformService : IGamePlatformService {
     }
 
     public async Task<bool> DeleteForGame(int gameId) {
-        IEnumerable<GamePlatform> gamePlatforms = await this._gamePlatformRepository.GetAllForGame(gameId);
+        IEnumerable<GamePlatform> gamePlatforms = await this._gamePlatformRepository.GetForGame(gameId);
 
         if(gamePlatforms is null)
             return false;
@@ -34,7 +34,7 @@ public class GamePlatformService : IGamePlatformService {
     }
 
     public async Task<bool> DeleteForPlatform(int platformId) {
-        IEnumerable<GamePlatform> gamePlatforms = await this._gamePlatformRepository.GetAllForPlatform(platformId);
+        IEnumerable<GamePlatform> gamePlatforms = await this._gamePlatformRepository.GetForPlatform(platformId);
 
         if(gamePlatforms is null)
             return false;

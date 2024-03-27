@@ -1,16 +1,24 @@
 using GamesAPI.Core.DataContexts;
+using GamesAPI.Core.Models;
 using GamesAPI.Models;
 using Microsoft.EntityFrameworkCore;
+using StandardizedFilters.Core.Services.Request;
 
 namespace GamesAPI.Repositories;
 public class CategoryRepository : ICategoryRepository {
+    private readonly IRepositoryHelper<Category> _repositoryHelper;
     private readonly BaseContext _db;
-    public CategoryRepository(BaseContext db) {
+    public CategoryRepository(BaseContext db, IRepositoryHelper<Category> helper) {
         this._db = db;
+        this._repositoryHelper = helper;
     }
 
-    public async Task<IEnumerable<Category>> GetAll() {
-        return await _db.Categories.ToListAsync();
+    public async Task<IEnumerable<Category>> Get(RequestFilter[]? filters) {
+        IQueryable<Category> categoriesQuery = _db.Categories;
+
+        categoriesQuery = _repositoryHelper.ApplyFilters(categoriesQuery, filters);
+
+        return await categoriesQuery.ToListAsync();
     }
 
     public async Task<Category?> Find(int id) {

@@ -6,6 +6,7 @@ using GamesAPI.Dtos;
 using GamesAPI.Services;
 using GamesAPI.Core.Services;
 using GamesAPI.Models;
+using GamesAPI.Core.Models;
 
 namespace GamesAPI.Controllers;
 
@@ -27,8 +28,8 @@ public class DeveloperController : ControllerBase
     
     [Authorize(Roles = "Admin")]
 	[HttpGet]
-    public async Task<ActionResult<Collection<DeveloperDto>>> Get() {
-        List<Developer> developers = (await this._developerService.GetAll()).ToList();
+    public async Task<ActionResult<Collection<DeveloperDto>>> Get([FromQuery] RequestFilter[]? filters = null) {
+        List<Developer> developers = (await this._developerService.Get(filters)).ToList();
 
         List<DeveloperDto> developerDtos = _mapper.Map<List<DeveloperDto>>(developers);
 

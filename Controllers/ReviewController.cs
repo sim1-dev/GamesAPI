@@ -6,6 +6,7 @@ using GamesAPI.Dtos;
 using GamesAPI.Services;
 using GamesAPI.Core.Services;
 using GamesAPI.Models;
+using GamesAPI.Core.Models;
 
 namespace GamesAPI.Controllers;
 
@@ -26,8 +27,8 @@ public class ReviewController : ControllerBase
     
     [AllowAnonymous]
 	[HttpGet]
-    public async Task<ActionResult<Collection<ReviewDto>>> Get() {
-        List<Review> reviews = (await this._reviewService.GetAll()).ToList();
+    public async Task<ActionResult<Collection<ReviewDto>>> Get([FromQuery] RequestFilter[]? filters = null) {
+        List<Review> reviews = (await this._reviewService.Get(filters)).ToList();
 
         List<ReviewDto> reviewDtos = _mapper.Map<List<ReviewDto>>(reviews);
 

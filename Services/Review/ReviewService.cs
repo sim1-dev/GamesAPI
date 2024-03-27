@@ -2,6 +2,7 @@ using AutoMapper;
 using GamesAPI.Models;
 using GamesAPI.Repositories;
 using GamesAPI.Dtos;
+using GamesAPI.Core.Models;
 
 namespace GamesAPI.Services;
 
@@ -15,8 +16,8 @@ public class ReviewService : IReviewService {
         this._mapper = mapper;
     }
 
-    public async Task<IEnumerable<Review>> GetAll() {
-        IEnumerable<Review> reviews = await this._reviewRepository.GetAll();
+    public async Task<IEnumerable<Review>> Get(RequestFilter[]? filters) {
+        IEnumerable<Review> reviews = await this._reviewRepository.Get(filters);
         return reviews;
     }
     

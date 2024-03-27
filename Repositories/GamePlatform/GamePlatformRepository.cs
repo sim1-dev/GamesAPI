@@ -9,13 +9,13 @@ public class GamePlatformRepository : IGamePlatformRepository {
         this._db = db;
     }
 
-    public async Task<IEnumerable<GamePlatform>> GetAllForGame(int gameId) {
+    public async Task<IEnumerable<GamePlatform>> GetForGame(int gameId) {
         return await _db.GamePlatforms
             .Where(x => x.GameId == gameId)
         .ToListAsync();
     }
 
-    public async Task<IEnumerable<GamePlatform>> GetAllForPlatform(int platformId) {
+    public async Task<IEnumerable<GamePlatform>> GetForPlatform(int platformId) {
         return await _db.GamePlatforms
             .Where(x => x.PlatformId == platformId)
         .ToListAsync();

@@ -4,6 +4,7 @@ using GamesAPI.Dtos;
 using GamesAPI.Models;
 using AutoMapper;
 using GamesAPI.Services;
+using GamesAPI.Core.Models;
 
 namespace GamesAPI.Controllers;
 
@@ -21,8 +22,8 @@ public class CategoryController : ControllerBase
     
     [AllowAnonymous]
 	[HttpGet]
-    public async Task<ActionResult<IEnumerable<CategoryDto>>> Get() {
-        List<Category> categories = (await this._categoryService.GetAll()).ToList();
+    public async Task<ActionResult<IEnumerable<CategoryDto>>> Get([FromQuery] RequestFilter[]? filters = null) {
+        List<Category> categories = (await this._categoryService.Get(filters)).ToList();
 
         List<CategoryDto> categoryDtos = this._mapper.Map<List<CategoryDto>>(categories);
 

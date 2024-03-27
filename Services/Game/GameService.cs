@@ -3,6 +3,7 @@ using GamesAPI.Models;
 using GamesAPI.Dtos;
 using GamesAPI.Repositories;
 using GamesAPI.Core.Services;
+using GamesAPI.Core.Models;
 
 namespace GamesAPI.Services;
 
@@ -20,8 +21,8 @@ public class GameService : IGameService {
         this._fileService = fileService;
     }
 
-    public async Task<IEnumerable<Game>> GetAll() {
-        IEnumerable<Game> games = await this._gameRepository.GetAll();
+    public async Task<IEnumerable<Game>> Get(RequestFilter[]? filters) {
+        IEnumerable<Game> games = await this._gameRepository.Get(filters);
 
         return games;
     }

@@ -1,17 +1,26 @@
 using GamesAPI.Core.DataContexts;
+using GamesAPI.Core.Models;
 using GamesAPI.Models;
 using Microsoft.EntityFrameworkCore;
+using StandardizedFilters.Core.Services.Request;
 
 namespace GamesAPI.Repositories;
 public class PlatformRepository : IPlatformRepository {
+    private readonly IRepositoryHelper<Platform> _repositoryHelper;
     private readonly BaseContext _db;
-    public PlatformRepository(BaseContext db) {
+    public PlatformRepository(BaseContext db, IRepositoryHelper<Platform> repositoryHelper) {
         this._db = db;
+        this._repositoryHelper = repositoryHelper;
     }
 
-    public async Task<IEnumerable<Platform>> GetAll() {
-        return await _db.Platforms.ToListAsync();
+    public async Task<IEnumerable<Platform>> Get(RequestFilter[]? filters) {
+        IQueryable<Platform> platformsQuery = _db.Platforms;
+
+        platformsQuery = _repositoryHelper.ApplyFilters(platformsQuery, filters);
+
+        return await platformsQuery.ToListAsync();
     }
+    
 
     public async Task<Platform?> Find(int id) {
         Platform? platform = await _db.Platforms

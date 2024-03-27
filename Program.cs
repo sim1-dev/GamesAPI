@@ -14,6 +14,7 @@ using Serilog;
 using GamesAPI.Core.Repositories;
 using Asp.Versioning;
 using Microsoft.AspNetCore.StaticFiles;
+using StandardizedFilters.Core.Services.Request;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -83,6 +84,7 @@ builder.Services
 ;
 
 builder.Services
+    .AddScoped(typeof(IRepositoryHelper<>), typeof(RepositoryHelper<>))
     .AddScoped<IUserRepository, UserRepository>()
 ;
 

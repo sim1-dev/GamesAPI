@@ -1,16 +1,25 @@
 using GamesAPI.Core.DataContexts;
+using GamesAPI.Core.Models;
 using GamesAPI.Models;
 using Microsoft.EntityFrameworkCore;
+using StandardizedFilters.Core.Services.Request;
 
 namespace GamesAPI.Repositories;
 public class SoftwareHouseRepository : ISoftwareHouseRepository {
+
+    private readonly IRepositoryHelper<SoftwareHouse> _repositoryHelper;
     private readonly BaseContext _db;
-    public SoftwareHouseRepository(BaseContext db) {
+    public SoftwareHouseRepository(BaseContext db, IRepositoryHelper<SoftwareHouse> repositoryHelper) {
         this._db = db;
+        this._repositoryHelper = repositoryHelper;
     }
 
-    public async Task<IEnumerable<SoftwareHouse>> GetAll() {
-        return await _db.SoftwareHouses.ToListAsync();
+    public async Task<IEnumerable<SoftwareHouse>> Get(RequestFilter[]? filters) {
+        IQueryable<SoftwareHouse> softwareHousesQuery = _db.SoftwareHouses;
+
+        softwareHousesQuery = _repositoryHelper.ApplyFilters(softwareHousesQuery, filters);
+
+        return await softwareHousesQuery.ToListAsync();
     }
 
     public async Task<SoftwareHouse?> Find(int id) {

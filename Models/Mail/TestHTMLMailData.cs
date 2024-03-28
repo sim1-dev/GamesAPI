@@ -30,7 +30,10 @@ public class TestHTMLMailData : HTMLMailData {
         }
 
         // Insert the list of categories into the template body
-        templateBody = templateBody.Remove(index, categoriesPlaceholder.Length).Insert(index, categoriesBuilder.ToString());
+        templateBody = templateBody
+            .Remove(index, categoriesPlaceholder.Length)
+            .Insert(index, categoriesBuilder.ToString())
+        ;
 
         return templateBody;
     }

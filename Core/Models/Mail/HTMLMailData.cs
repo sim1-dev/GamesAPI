@@ -4,34 +4,21 @@ namespace GamesAPI.Core.Models;
 /*
     Extend this class and override processTemplateParams() to parse custom params
 */
-public class HTMLMailData : IMailData {
-    public MailHeader Header { get; set; }
-    public string Subject { get; set; } = "";
-    public MimeEntity? Body { get; set; }
+public class HTMLMailData : MailData {
     public string MailPath = CoreMailTemplates.BASE;
 
-    public HTMLMailData(MailHeader header, string subject, MimeEntity body) {
-        this.Header = header;
-        this.Subject = subject;
-        this.Body = body;
-    }
+    public HTMLMailData(MailHeader header, string subject, MimeEntity body) : base(header, subject) { }
 
-    public HTMLMailData(MailHeader header, string subject, string mailPath = CoreMailTemplates.BASE) {
-        this.Header = header;
-        this.Subject = subject;
+    public HTMLMailData(MailHeader header, string subject, string mailPath = CoreMailTemplates.BASE): base(header, subject) {
         this.MailPath = mailPath;
 
-        this.BuildBodyFromTemplate(mailPath).Wait();
+        this.AddBodyFromTemplate(mailPath).Wait();
     }
 
-    public async Task BuildBodyFromTemplate(string template = CoreMailTemplates.BASE) {
+    public async Task AddBodyFromTemplate(string template = CoreMailTemplates.BASE) {
         string templateBody = await File.ReadAllTextAsync(Path.Combine(Directory.GetCurrentDirectory(), template));
 
-        templateBody = this.processTemplateParams(templateBody);
-
-        this.Body = new TextPart(MimeKit.Text.TextFormat.Html) {
-            Text = templateBody
-        };
+        this.BodyBuilder.HtmlBody = this.processTemplateParams(templateBody);
     }
 
     public virtual string processTemplateParams(string templateBody) {

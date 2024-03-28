@@ -24,8 +24,8 @@ public class TestController : ControllerBase {
             Ccs = new List<MailRecipientData>(),
             Bccs = new List<MailRecipientData>()
         };
-        MailData mailData = new MailData(header, "Subject", "This is a test mail", new MimeKit.BodyBuilder());
-
+        MailData mailData = new MailData(header, "Subject", "This is a test mail");
+        
         return await _mailService.Send(mailData);
     }
 
@@ -40,6 +40,23 @@ public class TestController : ControllerBase {
             Bccs = new List<MailRecipientData>()
         };
         HTMLMailData mailData = new TestHTMLMailData(header);
+
+        return await _mailService.Send(mailData);
+    }
+
+
+    [HttpPost]
+    [Route("attachments-html-mail/send")]
+    public async Task<bool> SendAttachmentsHtmlMail() {
+        MailHeader header = new MailHeader {
+            Recipients = new List<MailRecipientData>() {
+                new MailRecipientData("test@test.com", "Test Emailed")
+            },
+            Ccs = new List<MailRecipientData>(),
+            Bccs = new List<MailRecipientData>()
+        };
+        HTMLMailData mailData = new TestHTMLMailData(header);
+        mailData.AddAttachmentFromPath(Directory.GetCurrentDirectory() + "\\Controllers\\TestController.cs");
 
         return await _mailService.Send(mailData);
     }

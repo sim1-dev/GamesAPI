@@ -18,12 +18,11 @@ public class MailService : IMailService {
         try {
             using (MimeMessage emailMessage = new MimeMessage()) {
                 this.AddSender(emailMessage);
-
                 this.AddRecipients(emailMessage, mailData);
-
                 this.AddSubject(emailMessage, mailData);
 
-                await this.AddBody(emailMessage, mailData);
+
+                await this.BuildBody(emailMessage, mailData);
                 
                 using (SmtpClient mailClient = new SmtpClient()) {
                     await mailClient.ConnectAsync(_mailSettings.Server, _mailSettings.Port, MailKit.Security.SecureSocketOptions.StartTls);
@@ -34,8 +33,8 @@ public class MailService : IMailService {
             }
             return true;
         }
-        catch (Exception) {
-            this._logger.LogError("Error sending mail {mailData}", mailData);
+        catch (Exception exception) {
+            this._logger.LogError($"Error sending mail {mailData}: {exception}");
             return false;
         }
     }
@@ -80,8 +79,9 @@ public class MailService : IMailService {
         emailMessage.Subject = mailData.Subject;
     }
 
-    public virtual Task AddBody(MimeMessage emailMessage, IMailData mailData) {
-        emailMessage.Body = mailData.Body;
+
+    public virtual Task BuildBody(MimeMessage emailMessage, IMailData mailData) {
+        emailMessage.Body = mailData.GetBody();
         return Task.CompletedTask;
     }
 }

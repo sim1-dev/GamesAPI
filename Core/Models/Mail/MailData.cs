@@ -10,17 +10,18 @@ public class MailData: IMailData {
 
     public BodyBuilder BodyBuilder { get; set; }
 
+    // injecting BodyBuilder (by using this constructor) is recommended
+    public MailData(MailHeader header, string subject, BodyBuilder bodyBuilder) {
+        this.Header = header;
+        this.Subject = subject;
+        this.BodyBuilder = bodyBuilder;
+    }
+
     public MailData(MailHeader header, string subject) {
         this.Header = header;
         this.Subject = subject;
 
         this.BodyBuilder = new BodyBuilder();
-    }
-
-    public MailData(MailHeader header, string subject, BodyBuilder bodyBuilder) {
-        this.Header = header;
-        this.Subject = subject;
-        this.BodyBuilder = bodyBuilder;
     }
 
     public MailData(MailHeader header, string subject, string body) {
@@ -49,14 +50,6 @@ public class MailData: IMailData {
             ContentTransferEncoding = ContentEncoding.Base64,
             FileName = Path.GetFileName(filePath)
         };
-
-        // using(FileStream fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read)) {
-        //     MimePart attachment = new MimePart {
-        //         Content = new MimeContent(fileStream),
-        //         ContentDisposition = new ContentDisposition(ContentDisposition.Attachment),
-        //         ContentTransferEncoding = ContentEncoding.Base64,
-        //         FileName = Path.GetFileName(filePath)
-        //     };
 
         this.AddAttachment(attachment);
 

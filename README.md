@@ -27,6 +27,7 @@ Commit type must follow [standard naming convention](https://www.conventionalcom
 - Dynamicly filterable GET queries
 - Export data as documents (only Excel driver implemented)
 - Upload / Download Files facade
+- Compose / Send Mail facades for MailKit (Multiple recipients, attachments, Text/MimePart/HTML Template Body support with tokenization)
 
 - Semantic file structure (Core layer/Application layer)
 - Standardized SRP application layer (Controller -> Service -> Repository)

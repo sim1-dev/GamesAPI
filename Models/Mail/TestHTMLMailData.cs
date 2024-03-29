@@ -9,7 +9,7 @@ public class TestHTMLMailData : HTMLMailData {
     }
     
     // Simple example of a manual loop implementation. 
-    // It is not recommended to use this in a production environment, gotta find a proper way to use Razor templates
+    // It is not recommended to use this in a production environment. Rendering Razor templates would be better
     public override string processTemplateParams(string templateBody) {
         var categoriesPlaceholder = "{categories}";
 

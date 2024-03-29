@@ -30,6 +30,8 @@ builder.Logging
 // Add services to the container.
 string? connectionString = builder.Configuration.GetConnectionString("BaseContext");
 
+builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
+
 builder.Services.AddDbContext<BaseContext>(option => option.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
 builder.Services
@@ -71,6 +73,10 @@ builder.Services
 builder.Services
     .AddScoped<IUserService, UserService>()
     .AddScoped(typeof(IExcelExportService<>), typeof(ExcelExportService<>))
+;
+
+builder.Services
+    .AddScoped<IMailService, MailService>()
 ;
 
 builder.Services
@@ -120,7 +126,7 @@ builder.Services
 ;
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-//builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen(option => {
     option.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme {

@@ -12,8 +12,7 @@ namespace GamesAPI.Controllers;
 
 [ApiController]
 [Route("api/[controller]s")]
-public class GameController : ControllerBase
-{
+public class GameController : ControllerBase {
     private readonly IMapper _mapper;
     private readonly IGameService _gameService;
     private readonly IFileService _fileService;

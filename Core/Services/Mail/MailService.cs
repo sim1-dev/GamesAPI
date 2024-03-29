@@ -46,31 +46,31 @@ public class MailService : IMailService {
     }
 
     public void AddRecipients(MimeMessage emailMessage, IMailData mailData) {
-        foreach (MailRecipientData mailRecipientDataTo in mailData.Header.Recipients) {
-            if (mailRecipientDataTo.Address == "")
+        foreach (MailRecipient MailRecipientTo in mailData.Header.Recipients) {
+            if (MailRecipientTo.Address == "")
                 throw new ArgumentException("RecipientEmail address not provided.");
 
-            if (mailRecipientDataTo.FullName == "")
-                mailRecipientDataTo.FullName = mailRecipientDataTo.Address;
+            if (MailRecipientTo.FullName == "")
+                MailRecipientTo.FullName = MailRecipientTo.Address;
 
-            emailMessage.To.Add(new MailboxAddress(mailRecipientDataTo.FullName, mailRecipientDataTo.Address));
+            emailMessage.To.Add(new MailboxAddress(MailRecipientTo.FullName, MailRecipientTo.Address));
         }
 
         // cc and bcc
         if (mailData.Header.Ccs is not null) {
-            foreach (MailRecipientData mailRecipientDataCc in mailData.Header.Ccs) {
-                if (mailRecipientDataCc.Address == "")
+            foreach (MailRecipient MailRecipientCc in mailData.Header.Ccs) {
+                if (MailRecipientCc.Address == "")
                     throw new ArgumentException("Cc Email address not provided.");
 
-                emailMessage.Cc.Add(new MailboxAddress("Cc Receiver", mailRecipientDataCc.Address));
+                emailMessage.Cc.Add(new MailboxAddress("Cc Receiver", MailRecipientCc.Address));
             }
         }
         if (mailData.Header.Bccs is not null) {
-            foreach (MailRecipientData mailRecipientDataBcc in mailData.Header.Bccs) {
-                if (mailRecipientDataBcc.Address == "")
+            foreach (MailRecipient MailRecipientBcc in mailData.Header.Bccs) {
+                if (MailRecipientBcc.Address == "")
                     throw new ArgumentException("Bcc Email address not provided.");
 
-                emailMessage.Bcc.Add(new MailboxAddress("Bcc Receiver", mailRecipientDataBcc.Address));
+                emailMessage.Bcc.Add(new MailboxAddress("Bcc Receiver", MailRecipientBcc.Address));
             }
         }
     }

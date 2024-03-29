@@ -18,11 +18,11 @@ public class TestController : ControllerBase {
     [Route("mail/send")]
     public async Task<bool> SendMail() {
         MailHeader header = new MailHeader {
-            Recipients = new List<MailRecipientData>() {
-                new MailRecipientData("test@test.com", "Test Emailed")
+            Recipients = new List<MailRecipient>() {
+                new MailRecipient("test@test.com", "Test Emailed")
             },
-            Ccs = new List<MailRecipientData>(),
-            Bccs = new List<MailRecipientData>()
+            Ccs = new List<MailRecipient>(),
+            Bccs = new List<MailRecipient>()
         };
         MailData mailData = new MailData(header, "Subject", "This is a test mail");
         
@@ -33,11 +33,11 @@ public class TestController : ControllerBase {
     [Route("html-mail/send")]
     public async Task<bool> SendHtmlMail() {
         MailHeader header = new MailHeader {
-            Recipients = new List<MailRecipientData>() {
-                new MailRecipientData("test@test.com", "Test Emailed")
+            Recipients = new List<MailRecipient>() {
+                new MailRecipient("test@test.com", "Test Emailed")
             },
-            Ccs = new List<MailRecipientData>(),
-            Bccs = new List<MailRecipientData>()
+            Ccs = new List<MailRecipient>(),
+            Bccs = new List<MailRecipient>()
         };
         HTMLMailData mailData = new TestHTMLMailData(header);
 
@@ -49,11 +49,11 @@ public class TestController : ControllerBase {
     [Route("attachments-html-mail/send")]
     public async Task<bool> SendAttachmentsHtmlMail() {
         MailHeader header = new MailHeader {
-            Recipients = new List<MailRecipientData>() {
-                new MailRecipientData("test@test.com", "Test Emailed")
+            Recipients = new List<MailRecipient>() {
+                new MailRecipient("test@test.com", "Test Emailed")
             },
-            Ccs = new List<MailRecipientData>(),
-            Bccs = new List<MailRecipientData>()
+            Ccs = new List<MailRecipient>(),
+            Bccs = new List<MailRecipient>()
         };
         HTMLMailData mailData = new TestHTMLMailData(header);
         mailData.AddAttachmentFromPath(Directory.GetCurrentDirectory() + "\\Controllers\\TestController.cs");

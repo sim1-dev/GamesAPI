@@ -72,6 +72,7 @@ builder.Services
 
 builder.Services
     .AddScoped<IUserService, UserService>()
+    .AddScoped<IRoleService, RoleService>()
     .AddScoped(typeof(IExcelExportService<>), typeof(ExcelExportService<>))
 ;
 
@@ -92,6 +93,7 @@ builder.Services
 builder.Services
     .AddScoped(typeof(IRepositoryHelper<>), typeof(RepositoryHelper<>))
     .AddScoped<IUserRepository, UserRepository>()
+    .AddScoped<IRoleRepository, RoleRepository>()
 ;
 
 builder.Services

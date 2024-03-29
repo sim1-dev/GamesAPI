@@ -15,8 +15,8 @@ public class BaseContext : IdentityDbContext<User, Role, int> {
     }
 
     // Authorization
-    public new DbSet<User> Users {get; set;}
-    public new DbSet<Role> Roles {get; set;}
+    public override DbSet<User> Users {get; set;}
+    public override DbSet<Role> Roles {get; set;}
 
     // Discriminators
     public DbSet<Platform> Platforms {get; set;}

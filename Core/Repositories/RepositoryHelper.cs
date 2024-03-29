@@ -17,12 +17,47 @@ public class RepositoryHelper<TEntity>: IRepositoryHelper<TEntity> where TEntity
             if(filter.Field == "PasswordHash")
                 throw new ArgumentException("No, just no...");
 
-            switch (filter.Operation.ToUpper()) {
+            // expression processing
+            ParameterExpression parameterExpression = Expression.Parameter(typeof(TEntity), "x");
+            
+            MemberExpression fieldExpression = Expression.Property(parameterExpression, filter.Field);
+            ConstantExpression valueExpression = Expression.Constant(filter.Value);
+
+            if (fieldExpression.Type == typeof(int)) {
+                if (!int.TryParse(filter.Value, out int intValue))
+                    throw new ArgumentException("Provided filter value is not an integer.");
+                    
+                valueExpression = Expression.Constant(intValue);
+            }
+
+            if (fieldExpression.Type == typeof(DateTime)) {
+                if (!DateTime.TryParse(filter.Value, out DateTime dateTimeValue))
+                    throw new ArgumentException("Provided filter value is not a valid date.");
+
+                valueExpression = Expression.Constant(dateTimeValue);
+            }
+
+            switch(filter.Operation.ToUpper()) {
                 case "EQ":
-                    query = query.Where(this.BuildEqualPredicate(filter));
+                    query = query.Where(this.BuildEqualPredicate(parameterExpression, fieldExpression, valueExpression));
+                    break;
+                case "NEQ":
+                    query = query.Where(this.BuildNotEqualPredicate(parameterExpression, fieldExpression, valueExpression));
                     break;
                 case "LIKE":
-                    query = query.Where(this.BuildLikePredicate(filter));
+                    query = query.Where(this.BuildLikePredicate(parameterExpression, fieldExpression, valueExpression));
+                    break;
+                case "GT":
+                    query = query.Where(this.BuildGreaterThanPredicate(parameterExpression, fieldExpression, valueExpression));
+                    break;
+                case "GTE":
+                    query = query.Where(this.BuildGreaterThanOrEqualPredicate(parameterExpression, fieldExpression, valueExpression));
+                    break;
+                case "LT":
+                    query = query.Where(this.BuildLowerThanPredicate(parameterExpression, fieldExpression, valueExpression));
+                    break;
+                case "LTE":
+                    query = query.Where(this.BuildLowerThanOrEqualPredicate(parameterExpression, fieldExpression, valueExpression));
                     break;
                 // TODO implement other operators
                 default:
@@ -33,28 +68,34 @@ public class RepositoryHelper<TEntity>: IRepositoryHelper<TEntity> where TEntity
         return query;
     }
 
-    private Expression<Func<TEntity, bool>> BuildEqualPredicate(RequestFilter filter) {
-        ParameterExpression parameterExpression = Expression.Parameter(typeof(TEntity), "x");
 
-        MemberExpression fieldExpression = Expression.Property(parameterExpression, filter.Field);
-        Expression valueExpression = Expression.Constant(filter.Value);
-
-        if (fieldExpression.Type == typeof(int)) {
-            if (!int.TryParse(filter.Value, out int intValue))
-                throw new ArgumentException("Il valore del filtro non è un intero valido.");
-                
-            valueExpression = Expression.Constant(intValue);
-        }
-
-        return Expression.Lambda<Func<TEntity, bool>>(
-            Expression.Equal(fieldExpression, valueExpression), parameterExpression);
+    private Expression<Func<TEntity, bool>> BuildEqualPredicate(ParameterExpression parameterExpression, MemberExpression fieldExpression, ConstantExpression valueExpression) {
+        return Expression.Lambda<Func<TEntity, bool>>(Expression.Equal(fieldExpression, valueExpression), parameterExpression);
     }
 
-    private Expression<Func<TEntity, bool>> BuildLikePredicate(RequestFilter filter) {
-        ParameterExpression parameterExpression = Expression.Parameter(typeof(TEntity), "x");
+    private Expression<Func<TEntity, bool>> BuildNotEqualPredicate(ParameterExpression parameterExpression, MemberExpression fieldExpression, ConstantExpression valueExpression) {
+        return Expression.Lambda<Func<TEntity, bool>>(Expression.NotEqual(fieldExpression, valueExpression), parameterExpression);
+    }
 
-        MemberExpression fieldExpression = Expression.Property(parameterExpression, filter.Field);
-        ConstantExpression valueExpression = Expression.Constant(filter.Value);
+    private Expression<Func<TEntity, bool>> BuildGreaterThanPredicate(ParameterExpression parameterExpression, MemberExpression fieldExpression, ConstantExpression valueExpression) {
+        return Expression.Lambda<Func<TEntity, bool>>(Expression.GreaterThan(fieldExpression, valueExpression), parameterExpression);
+    }
+
+    private Expression<Func<TEntity, bool>> BuildGreaterThanOrEqualPredicate(ParameterExpression parameterExpression, MemberExpression fieldExpression, ConstantExpression valueExpression) {
+        return Expression.Lambda<Func<TEntity, bool>>(Expression.GreaterThanOrEqual(fieldExpression, valueExpression), parameterExpression);
+    }
+
+    private Expression<Func<TEntity, bool>> BuildLowerThanPredicate(ParameterExpression parameterExpression, MemberExpression fieldExpression, ConstantExpression valueExpression) {
+        return Expression.Lambda<Func<TEntity, bool>>(Expression.LessThan(fieldExpression, valueExpression), parameterExpression);
+    }
+
+    private Expression<Func<TEntity, bool>> BuildLowerThanOrEqualPredicate(ParameterExpression parameterExpression, MemberExpression fieldExpression, ConstantExpression valueExpression) {
+        return Expression.Lambda<Func<TEntity, bool>>(Expression.LessThanOrEqual(fieldExpression, valueExpression), parameterExpression);
+    }
+
+    private Expression<Func<TEntity, bool>> BuildLikePredicate(ParameterExpression parameterExpression, MemberExpression fieldExpression, ConstantExpression valueExpression) {
+        if(fieldExpression.Type != typeof(string))
+            throw new ArgumentException("Provided LIKE filter field is not a string.");
 
         MethodInfo? toLowerMethod = typeof(string).GetMethod("ToLower", Type.EmptyTypes);
 

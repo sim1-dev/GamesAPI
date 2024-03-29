@@ -1,8 +1,11 @@
 # GamesAPI
 
-An example implementation of a small .NET games library Web API i developed for educational purposes.
+#### An example implementation of a small .NET games library Web API i developed for educational purposes.
+
 It is not intended to be production ready or to be maintained apart from occasional bug fixing; **most of the features provided are not fully implemented, rather included as a demonstration on how they could be structured in a realistic scenario**.
+
 If you want to take a look at the actual development stage, checkout the '**develop**' branch. 
+
 Additional feature branches may be opened occasionally.
 
 ### Commits
@@ -27,6 +30,7 @@ Commit type must follow [standard naming convention](https://www.conventionalcom
 - Dynamicly filterable GET queries
 - Export data as documents (only Excel driver implemented)
 - Upload / Download Files facade
+- Compose / Send Mail facades for MailKit (Multiple recipients, attachments, Text/MimePart/HTML Template Body support with tokenization)
 
 - Semantic file structure (Core layer/Application layer)
 - Standardized SRP application layer (Controller -> Service -> Repository)

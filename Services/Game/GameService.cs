@@ -21,8 +21,8 @@ public class GameService : IGameService {
         this._fileService = fileService;
     }
 
-    public async Task<IEnumerable<Game>> Get(RequestFilter[]? filters) {
-        IEnumerable<Game> games = await this._gameRepository.Get(filters);
+    public async Task<IEnumerable<Game>> Get(RequestFilter[]? filters, RequestOrder? order) {
+        IEnumerable<Game> games = await this._gameRepository.Get(filters, order);
 
         return games;
     }

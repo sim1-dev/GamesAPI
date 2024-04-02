@@ -13,7 +13,7 @@ public class GameRepository : IGameRepository {
         this._repositoryHelper = helper;
     }
 
-    public async Task<IEnumerable<Game>> Get(RequestFilter[]? filters) {
+    public async Task<IEnumerable<Game>> Get(RequestFilter[]? filters, RequestOrder? order) {
         IQueryable<Game> gamesQuery = this._db.Games
             .Include(game => game.Platforms)
             .Include(game => game.SoftwareHouse)
@@ -22,6 +22,7 @@ public class GameRepository : IGameRepository {
         ;
 
         gamesQuery = this._repositoryHelper.ApplyFilters(gamesQuery, filters);
+        gamesQuery = this._repositoryHelper.ApplyOrder(gamesQuery, order);
     
         List<Game> games = await gamesQuery.ToListAsync();
 
@@ -54,5 +55,4 @@ public class GameRepository : IGameRepository {
         _db.Games.Remove(game);
         await _db.SaveChangesAsync();
     }
-
 }

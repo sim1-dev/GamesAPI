@@ -1,7 +1,7 @@
 using System.Linq.Expressions;
 using System.Reflection;
-using GamesAPI.Core.DataContexts;
 using GamesAPI.Core.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace StandardizedFilters.Core.Services.Request;
 public class RepositoryHelper<TEntity>: IRepositoryHelper<TEntity> where TEntity : class
@@ -16,8 +16,8 @@ public class RepositoryHelper<TEntity>: IRepositoryHelper<TEntity> where TEntity
         foreach (RequestFilter filter in filters) {
             if(filter.Field == "PasswordHash")
                 throw new ArgumentException("No, just no...");
+                
 
-            // expression processing
             ParameterExpression parameterExpression = Expression.Parameter(typeof(TEntity), "x");
             
             MemberExpression fieldExpression = Expression.Property(parameterExpression, filter.Field);
@@ -64,7 +64,30 @@ public class RepositoryHelper<TEntity>: IRepositoryHelper<TEntity> where TEntity
                     throw new ArgumentException("Filter operator not recognized");
             }
         }
-        // TODO implement sorting, pagination
+        // TODO implement pagination
+        return query;
+    }
+
+    public IQueryable<TEntity> ApplyOrder(IQueryable<TEntity> query, RequestOrder? order) {
+        if (order is null)
+            return query;
+
+        if(order.Field is null || order.Direction is null)
+            return query;
+
+        string? field = char.ToUpper(order.Field[0]) + order.Field.Substring(1);
+
+        switch (order.Direction.ToLower()){
+            case OrderDirection.ASC:
+                query = query.OrderBy(e => EF.Property<object>(e, field));
+                break;
+            case OrderDirection.DESC:
+                query = query.OrderByDescending(e => EF.Property<object>(e, field));
+                break;
+            default:
+                throw new ArgumentException("Order direction not recognized");
+        }
+
         return query;
     }
 

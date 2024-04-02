@@ -19,8 +19,8 @@ public class RoleController : ControllerBase {
     }
 
     [HttpGet]
-    public async Task<ActionResult<Collection<RoleDto>>> Get([FromQuery] RequestFilter[]? filters = null) {
-        List<Role> roles = (await this._roleService.Get(filters)).ToList();
+    public async Task<ActionResult<Collection<RoleDto>>> Get([FromQuery] RequestFilter[]? filters = null, [FromQuery] RequestOrder? order = null) {
+        List<Role> roles = (await this._roleService.Get(filters, order)).ToList();
 
         List<RoleDto> roleDtos = _mapper.Map<List<RoleDto>>(roles);
 

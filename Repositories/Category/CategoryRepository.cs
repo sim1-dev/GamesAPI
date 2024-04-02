@@ -13,10 +13,11 @@ public class CategoryRepository : ICategoryRepository {
         this._repositoryHelper = helper;
     }
 
-    public async Task<IEnumerable<Category>> Get(RequestFilter[]? filters) {
+    public async Task<IEnumerable<Category>> Get(RequestFilter[]? filters, RequestOrder? order) {
         IQueryable<Category> categoriesQuery = _db.Categories;
 
         categoriesQuery = _repositoryHelper.ApplyFilters(categoriesQuery, filters);
+        categoriesQuery = _repositoryHelper.ApplyOrder(categoriesQuery, order);
 
         return await categoriesQuery.ToListAsync();
     }

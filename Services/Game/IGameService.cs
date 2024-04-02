@@ -1,6 +1,7 @@
 using GamesAPI.Models;
 using GamesAPI.Core.Services;
 using GamesAPI.Dtos;
+using GamesAPI.Core.Models;
 
 namespace GamesAPI.Services;
 

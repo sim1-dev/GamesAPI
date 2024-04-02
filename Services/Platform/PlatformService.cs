@@ -16,8 +16,8 @@ public class PlatformService : IPlatformService {
         this._mapper = mapper;
     }
 
-    public async Task<IEnumerable<Platform>> Get(RequestFilter[]? filters) {
-        IEnumerable<Platform> platforms = await this._platformRepository.Get(filters);
+    public async Task<IEnumerable<Platform>> Get(RequestFilter[]? filters, RequestOrder? order) {
+        IEnumerable<Platform> platforms = await this._platformRepository.Get(filters, order);
         return platforms;
     }
     

@@ -13,13 +13,14 @@ public class ReviewRepository : IReviewRepository {
         this._repositoryHelper = repositoryHelper;
     }
 
-    public async Task<IEnumerable<Review>> Get(RequestFilter[]? filters) {
+    public async Task<IEnumerable<Review>> Get(RequestFilter[]? filters, RequestOrder? order) {
         IQueryable<Review> reviewsQuery = _db.Reviews
             .Include(review => review.ReviewerUser)
             .Include(review => review.Game)
         ;
 
         reviewsQuery = _repositoryHelper.ApplyFilters(reviewsQuery, filters);
+        reviewsQuery = _repositoryHelper.ApplyOrder(reviewsQuery, order);
         
         return await reviewsQuery.ToListAsync();
     }

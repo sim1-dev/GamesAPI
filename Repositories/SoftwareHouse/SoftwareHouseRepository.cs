@@ -14,10 +14,11 @@ public class SoftwareHouseRepository : ISoftwareHouseRepository {
         this._repositoryHelper = repositoryHelper;
     }
 
-    public async Task<IEnumerable<SoftwareHouse>> Get(RequestFilter[]? filters) {
+    public async Task<IEnumerable<SoftwareHouse>> Get(RequestFilter[]? filters, RequestOrder? order) {
         IQueryable<SoftwareHouse> softwareHousesQuery = _db.SoftwareHouses;
 
         softwareHousesQuery = _repositoryHelper.ApplyFilters(softwareHousesQuery, filters);
+        softwareHousesQuery = _repositoryHelper.ApplyOrder(softwareHousesQuery, order);
 
         return await softwareHousesQuery.ToListAsync();
     }

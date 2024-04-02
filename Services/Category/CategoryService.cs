@@ -16,8 +16,8 @@ public class CategoryService : ICategoryService {
         this._mapper = mapper;
     }
 
-    public async Task<IEnumerable<Category>> Get(RequestFilter[]? filters, RequestOrder? order) {
-        IEnumerable<Category> categories = await this._categoryRepository.Get(filters, order);
+    public async Task<IEnumerable<Category>> Get(RequestFilter[]? filters, RequestOrder? order, RequestPagination? pagination) {
+        IEnumerable<Category> categories = await this._categoryRepository.Get(filters, order, pagination);
         return categories;
     }
     

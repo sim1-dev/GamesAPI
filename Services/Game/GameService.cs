@@ -8,7 +8,6 @@ using GamesAPI.Core.Models;
 namespace GamesAPI.Services;
 
 public class GameService : IGameService {
-
     private readonly IFileService _fileService;
     private readonly IPlatformService _platformService;
     private readonly IGameRepository _gameRepository;
@@ -21,8 +20,8 @@ public class GameService : IGameService {
         this._fileService = fileService;
     }
 
-    public async Task<IEnumerable<Game>> Get(RequestFilter[]? filters, RequestOrder? order) {
-        IEnumerable<Game> games = await this._gameRepository.Get(filters, order);
+    public async Task<IEnumerable<Game>> Get(RequestFilter[]? filters, RequestOrder? order, RequestPagination? pagination) {
+        IEnumerable<Game> games = await this._gameRepository.Get(filters, order, pagination);
 
         return games;
     }

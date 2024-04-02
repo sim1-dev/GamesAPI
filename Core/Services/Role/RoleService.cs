@@ -14,8 +14,8 @@ public class RoleService : IRoleService {
         this._mapper = mapper;
     }
 
-    public async Task<IEnumerable<Role>> Get(RequestFilter[]? filters, RequestOrder? order) {
-        IEnumerable<Role> roles = await this._roleRepository.Get(filters, order);
+    public async Task<IEnumerable<Role>> Get(RequestFilter[]? filters, RequestOrder? order, RequestPagination? pagination) {
+        IEnumerable<Role> roles = await this._roleRepository.Get(filters, order, pagination);
         return roles;
     }
 

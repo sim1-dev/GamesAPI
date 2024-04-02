@@ -23,8 +23,8 @@ public class SoftwareHouseController : ControllerBase
     
     [AllowAnonymous]
 	[HttpGet]
-    public async Task<ActionResult<Collection<SoftwareHouseDto>>> Get([FromQuery] RequestFilter[]? filters = null, [FromQuery] RequestOrder? order = null) {
-        List<SoftwareHouse>? softwareHouses = (await this._softwareHouseService.Get(filters, order)).ToList();
+    public async Task<ActionResult<Collection<SoftwareHouseDto>>> Get([FromQuery] RequestFilter[]? filters = null, [FromQuery] RequestOrder? order = null, [FromQuery] RequestPagination? pagination = null) {
+        List<SoftwareHouse>? softwareHouses = (await this._softwareHouseService.Get(filters, order, pagination)).ToList();
 
         List<SoftwareHouseDto> softwareHouseDtos = _mapper.Map<List<SoftwareHouseDto>>(softwareHouses);
 

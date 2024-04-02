@@ -13,7 +13,7 @@ public class ReviewRepository : IReviewRepository {
         this._repositoryHelper = repositoryHelper;
     }
 
-    public async Task<IEnumerable<Review>> Get(RequestFilter[]? filters, RequestOrder? order) {
+    public async Task<IEnumerable<Review>> Get(RequestFilter[]? filters, RequestOrder? order, RequestPagination? pagination) {
         IQueryable<Review> reviewsQuery = _db.Reviews
             .Include(review => review.ReviewerUser)
             .Include(review => review.Game)
@@ -21,6 +21,7 @@ public class ReviewRepository : IReviewRepository {
 
         reviewsQuery = _repositoryHelper.ApplyFilters(reviewsQuery, filters);
         reviewsQuery = _repositoryHelper.ApplyOrder(reviewsQuery, order);
+        reviewsQuery = _repositoryHelper.ApplyPagination(reviewsQuery, pagination);
         
         return await reviewsQuery.ToListAsync();
     }

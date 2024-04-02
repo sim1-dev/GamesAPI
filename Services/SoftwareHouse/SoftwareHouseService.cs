@@ -16,8 +16,8 @@ public class SoftwareHouseService : ISoftwareHouseService {
         this._mapper = mapper;
     }
 
-    public async Task<IEnumerable<SoftwareHouse>> Get(RequestFilter[]? filters, RequestOrder? order) {
-        IEnumerable<SoftwareHouse> softwareHouses = await this._softwareHouseRepository.Get(filters, order);
+    public async Task<IEnumerable<SoftwareHouse>> Get(RequestFilter[]? filters, RequestOrder? order, RequestPagination? pagination) {
+        IEnumerable<SoftwareHouse> softwareHouses = await this._softwareHouseRepository.Get(filters, order, pagination);
 
         return softwareHouses;
     }

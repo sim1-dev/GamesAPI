@@ -24,11 +24,11 @@ public class CategoryServiceTest {
             new Category { Id = 2, Name = "Test Category 2" }
         ];
 
-        this._mockRepository.Setup(categoryRepository => categoryRepository.Get(null, null)).ReturnsAsync(categories);
+        this._mockRepository.Setup(categoryRepository => categoryRepository.Get(null, null, null)).ReturnsAsync(categories);
 
         CategoryService categoryService = new CategoryService(this._mockRepository.Object, this._mockMapper.Object);
 
-        IEnumerable<Category> result = await categoryService.Get(null, null);
+        IEnumerable<Category> result = await categoryService.Get(null, null, null);
 
         Assert.NotNull(result);
         Assert.Equal(categories, result);

@@ -16,8 +16,8 @@ public class ReviewService : IReviewService {
         this._mapper = mapper;
     }
 
-    public async Task<IEnumerable<Review>> Get(RequestFilter[]? filters, RequestOrder? order) {
-        IEnumerable<Review> reviews = await this._reviewRepository.Get(filters, order);
+    public async Task<IEnumerable<Review>> Get(RequestFilter[]? filters, RequestOrder? order, RequestPagination? pagination) {
+        IEnumerable<Review> reviews = await this._reviewRepository.Get(filters, order, pagination);
         return reviews;
     }
     

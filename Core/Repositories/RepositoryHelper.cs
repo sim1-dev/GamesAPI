@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using System.Reflection;
+using GamesAPI.Core.Constants;
 using GamesAPI.Core.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -37,26 +38,26 @@ public class RepositoryHelper<TEntity>: IRepositoryHelper<TEntity> where TEntity
                 valueExpression = Expression.Constant(dateTimeValue);
             }
 
-            switch(filter.Operation.ToUpper()) {
-                case "EQ":
+            switch(filter.Operation.ToLower()) {
+                case FilterOperation.EQUAL:
                     query = query.Where(this.BuildEqualPredicate(parameterExpression, fieldExpression, valueExpression));
                     break;
-                case "NEQ":
+                case FilterOperation.NOTEQUAL:
                     query = query.Where(this.BuildNotEqualPredicate(parameterExpression, fieldExpression, valueExpression));
                     break;
-                case "LIKE":
+                case FilterOperation.LIKE:
                     query = query.Where(this.BuildLikePredicate(parameterExpression, fieldExpression, valueExpression));
                     break;
-                case "GT":
+                case FilterOperation.GREATER:
                     query = query.Where(this.BuildGreaterThanPredicate(parameterExpression, fieldExpression, valueExpression));
                     break;
-                case "GTE":
+                case FilterOperation.GREATEREQUAL:
                     query = query.Where(this.BuildGreaterThanOrEqualPredicate(parameterExpression, fieldExpression, valueExpression));
                     break;
-                case "LT":
+                case FilterOperation.LOWER:
                     query = query.Where(this.BuildLowerThanPredicate(parameterExpression, fieldExpression, valueExpression));
                     break;
-                case "LTE":
+                case FilterOperation.LOWEREQUAL:
                     query = query.Where(this.BuildLowerThanOrEqualPredicate(parameterExpression, fieldExpression, valueExpression));
                     break;
                 default:

@@ -8,26 +8,12 @@ If you want to take a look at the actual development stage, checkout the '**deve
 
 Additional feature branches may be opened occasionally.
 
-### Commits
-#### Naming convention
-Commit type must follow [standard naming convention](https://www.conventionalcommits.org/en/v1.0.0/#summary):
-
-- **build**: Changes that affect the build system or external dependencies (example scopes: gulp, broccoli, npm)
-- **ci**: Changes to CI configuration files and scripts (example scopes: Travis, Circle, BrowserStack, SauceLabs)
-- **docs**: Documentation only changes
-- **feat**: A new feature
-- **fix**: A bug fix
-- **perf**: A code change that improves performance
-- **refactor**: A code change that neither fixes a bug nor adds a feature
-- **style**: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)
-- **test**: Adding missing tests or correcting existing tests
-
 ## Features
 - Bearer token based authentication system with numeric identities
 - API Versioning
 - Full-blown automatic exceptions handler for request scopes with Serilog logging
 - Standardized response formats
-- Dynamicly filterable GET queries
+- Dynamicly filterable, sortable and pageable GET queries
 - Export data as documents (only Excel driver implemented)
 - Upload / Download Files facade
 - Compose / Send Mail facades for MailKit (Multiple recipients, attachments, Text/MimePart/HTML Template Body support with tokenization)
@@ -56,6 +42,23 @@ Start the server
 ```bash
   dotnet run
 ```
+
+## Contributing
+
+### Commits
+#### Naming convention
+Commit type must follow [standard naming convention](https://www.conventionalcommits.org/en/v1.0.0/#summary):
+
+- **build**: Changes that affect the build system or external dependencies (example scopes: gulp, broccoli, npm)
+- **ci**: Changes to CI configuration files and scripts (example scopes: Travis, Circle, BrowserStack, SauceLabs)
+- **docs**: Documentation only changes
+- **feat**: A new feature
+- **fix**: A bug fix
+- **perf**: A code change that improves performance
+- **refactor**: A code change that neither fixes a bug nor adds a feature
+- **style**: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)
+- **test**: Adding missing tests or correcting existing tests
+
 
 ## License
 

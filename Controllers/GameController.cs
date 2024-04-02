@@ -27,8 +27,8 @@ public class GameController : ControllerBase {
     
     [AllowAnonymous]
 	[HttpGet]
-    public async Task<ActionResult<Collection<GameDto>>> Get([FromQuery] RequestFilter[]? filters = null, [FromQuery] RequestOrder? order = null) {
-        List<Game>? games = (await this._gameService.Get(filters, order)).ToList();
+    public async Task<ActionResult<Collection<GameDto>>> Get([FromQuery] RequestFilter[]? filters = null, [FromQuery] RequestOrder? order = null, [FromQuery] RequestPagination? pagination = null) {
+        List<Game>? games = (await this._gameService.Get(filters, order, pagination)).ToList();
 
         List<GameDto> gameDtos = _mapper.Map<List<GameDto>>(games);
 

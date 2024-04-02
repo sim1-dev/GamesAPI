@@ -59,12 +59,10 @@ public class RepositoryHelper<TEntity>: IRepositoryHelper<TEntity> where TEntity
                 case "LTE":
                     query = query.Where(this.BuildLowerThanOrEqualPredicate(parameterExpression, fieldExpression, valueExpression));
                     break;
-                // TODO implement other operators
                 default:
                     throw new ArgumentException("Filter operator not recognized");
             }
         }
-        // TODO implement pagination
         return query;
     }
 
@@ -89,6 +87,18 @@ public class RepositoryHelper<TEntity>: IRepositoryHelper<TEntity> where TEntity
         }
 
         return query;
+    }
+
+    public IQueryable<TEntity> ApplyPagination(IQueryable<TEntity> query, RequestPagination? pagination) {
+        if (pagination is null)
+            return query;
+
+        if(pagination.Page <= 0 || pagination.PageSize <= 0)
+            throw new ArgumentException("Page and page size must be greater than 0");
+
+        int offset = (pagination.Page - 1) * pagination.PageSize;
+
+        return query.Skip(offset).Take(pagination.PageSize);
     }
 
 

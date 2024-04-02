@@ -23,8 +23,8 @@ public class PlatformController : ControllerBase
     
     [AllowAnonymous]
 	[HttpGet]
-    public async Task<ActionResult<Collection<PlatformDto>>> Get([FromQuery] RequestFilter[]? filters = null, [FromQuery] RequestOrder? order = null) {
-        List<Platform>? platforms = (await this._platformService.Get(filters, order)).ToList();
+    public async Task<ActionResult<Collection<PlatformDto>>> Get([FromQuery] RequestFilter[]? filters = null, [FromQuery] RequestOrder? order = null, [FromQuery] RequestPagination? pagination = null) {
+        List<Platform>? platforms = (await this._platformService.Get(filters, order, pagination)).ToList();
 
         if(platforms is null)
             return NotFound();

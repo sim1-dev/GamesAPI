@@ -28,8 +28,8 @@ public class DeveloperController : ControllerBase
     
     [Authorize(Roles = "Admin")]
 	[HttpGet]
-    public async Task<ActionResult<Collection<DeveloperDto>>> Get([FromQuery] RequestFilter[]? filters = null, [FromQuery] RequestOrder? order = null) {
-        List<Developer> developers = (await this._developerService.Get(filters, order)).ToList();
+    public async Task<ActionResult<Collection<DeveloperDto>>> Get([FromQuery] RequestFilter[]? filters = null, [FromQuery] RequestOrder? order = null, [FromQuery] RequestPagination? pagination = null) {
+        List<Developer> developers = (await this._developerService.Get(filters, order, pagination)).ToList();
 
         List<DeveloperDto> developerDtos = _mapper.Map<List<DeveloperDto>>(developers);
 

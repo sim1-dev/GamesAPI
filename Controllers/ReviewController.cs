@@ -27,8 +27,8 @@ public class ReviewController : ControllerBase
     
     [AllowAnonymous]
 	[HttpGet]
-    public async Task<ActionResult<Collection<ReviewDto>>> Get([FromQuery] RequestFilter[]? filters = null, [FromQuery] RequestOrder? order = null) {
-        List<Review> reviews = (await this._reviewService.Get(filters, order)).ToList();
+    public async Task<ActionResult<Collection<ReviewDto>>> Get([FromQuery] RequestFilter[]? filters = null, [FromQuery] RequestOrder? order = null, [FromQuery] RequestPagination? pagination = null) {
+        List<Review> reviews = (await this._reviewService.Get(filters, order, pagination)).ToList();
 
         List<ReviewDto> reviewDtos = _mapper.Map<List<ReviewDto>>(reviews);
 

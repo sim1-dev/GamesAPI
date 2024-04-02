@@ -24,6 +24,8 @@ public class ResponseWrapperMiddleware {
                 object? responseBody = await FormatResponse(memStream);
                 context.Response.ContentType = "application/json";
                 context.Response.Body = originalBody;
+                
+                // TODO return number of pages for entity
                 await context.Response.WriteAsync(JsonConvert.SerializeObject(new Response {   
                     Success = true,
                     Data = responseBody

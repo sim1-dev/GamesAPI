@@ -13,11 +13,12 @@ public class PlatformRepository : IPlatformRepository {
         this._repositoryHelper = repositoryHelper;
     }
 
-    public async Task<IEnumerable<Platform>> Get(RequestFilter[]? filters, RequestOrder? order) {
+    public async Task<IEnumerable<Platform>> Get(RequestFilter[]? filters, RequestOrder? order, RequestPagination? pagination) {
         IQueryable<Platform> platformsQuery = _db.Platforms;
 
         platformsQuery = _repositoryHelper.ApplyFilters(platformsQuery, filters);
         platformsQuery = _repositoryHelper.ApplyOrder(platformsQuery, order);
+        platformsQuery = _repositoryHelper.ApplyPagination(platformsQuery, pagination);
 
         return await platformsQuery.ToListAsync();
     }

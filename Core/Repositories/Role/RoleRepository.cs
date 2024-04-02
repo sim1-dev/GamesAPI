@@ -16,10 +16,11 @@ public class RoleRepository : IRoleRepository {
         this._repositoryHelper = repositoryHelper;
     }
 
-    public async Task<IEnumerable<Role>> Get(RequestFilter[]? filters) {
+    public async Task<IEnumerable<Role>> Get(RequestFilter[]? filters, RequestOrder? order) {
         IQueryable<Role> rolesQuery = _db.Roles;
 
         rolesQuery = _repositoryHelper.ApplyFilters(rolesQuery, filters);
+        rolesQuery = _repositoryHelper.ApplyOrder(rolesQuery, order);
 
         return await rolesQuery.ToListAsync();
     }

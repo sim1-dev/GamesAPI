@@ -14,10 +14,11 @@ public class DeveloperRepository : IDeveloperRepository {
         this._repositoryHelper = repositoryHelper;
     }
 
-    public async Task<IEnumerable<Developer>> Get(RequestFilter[]? filters) {
+    public async Task<IEnumerable<Developer>> Get(RequestFilter[]? filters, RequestOrder? order) {
         IQueryable<Developer> developersQuery = _db.Developers;
 
         developersQuery = this._repositoryHelper.ApplyFilters(developersQuery, filters);
+        developersQuery = this._repositoryHelper.ApplyOrder(developersQuery, order);
 
         return await developersQuery.ToListAsync();
     }

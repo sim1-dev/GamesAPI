@@ -27,8 +27,8 @@ public class GameController : ControllerBase {
     
     [AllowAnonymous]
 	[HttpGet]
-    public async Task<ActionResult<Collection<GameDto>>> Get([FromQuery] RequestFilter[]? filters = null) {
-        List<Game>? games = (await this._gameService.Get(filters)).ToList();
+    public async Task<ActionResult<Collection<GameDto>>> Get([FromQuery] RequestFilter[]? filters = null, [FromQuery] RequestOrder? order = null) {
+        List<Game>? games = (await this._gameService.Get(filters, order)).ToList();
 
         List<GameDto> gameDtos = _mapper.Map<List<GameDto>>(games);
 
@@ -123,7 +123,7 @@ public class GameController : ControllerBase {
 
     [HttpPost("export/excel")]
     public async Task<IActionResult> ExportToExcel([FromBody] string fileName = "games.xlsx") {
-        List<Game> games = (await this._gameService.Get(null)).ToList();
+        List<Game> games = (await this._gameService.Get()).ToList();
 
         if(games is null)
             return NotFound();

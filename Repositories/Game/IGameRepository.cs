@@ -1,4 +1,3 @@
-using GamesAPI.Core.Models;
 using GamesAPI.Models;
 
 namespace GamesAPI.Repositories;

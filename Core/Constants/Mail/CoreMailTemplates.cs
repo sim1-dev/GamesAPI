@@ -1,4 +1,4 @@
-public static class CoreMailTemplates {
+public class CoreMailTemplates {
     public const string PATH = "Core/Templates/Mail/";
 
     

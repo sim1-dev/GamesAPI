@@ -19,8 +19,8 @@ public class UserController : ControllerBase {
     }
 
     [HttpGet]
-    public async Task<ActionResult<Collection<UserDto>>> Get([FromQuery] RequestFilter[]? filters = null, [FromQuery] RequestOrder? order = null) {
-        List<User> users = (await this._userService.Get(filters, order)).ToList();
+    public async Task<ActionResult<Collection<UserDto>>> Get([FromQuery] RequestFilter[]? filters = null, [FromQuery] RequestOrder? order = null, [FromQuery] RequestPagination? pagination = null) {
+        List<User> users = (await this._userService.Get(filters, order, pagination)).ToList();
 
         List<UserDto> userDtos = _mapper.Map<List<UserDto>>(users);
 

@@ -15,8 +15,8 @@ public class DeveloperService : IDeveloperService {
         this._mapper = mapper;
     }
 
-    public async Task<IEnumerable<Developer>> Get(RequestFilter[]? filters, RequestOrder? order) {
-        IEnumerable<Developer> developers = await this._developerRepository.Get(filters, order);
+    public async Task<IEnumerable<Developer>> Get(RequestFilter[]? filters, RequestOrder? order, RequestPagination? pagination) {
+        IEnumerable<Developer> developers = await this._developerRepository.Get(filters, order, pagination);
         return developers;
     }
 

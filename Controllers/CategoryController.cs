@@ -22,8 +22,8 @@ public class CategoryController : ControllerBase
     
     [AllowAnonymous]
 	[HttpGet]
-    public async Task<ActionResult<IEnumerable<CategoryDto>>> Get([FromQuery] RequestFilter[]? filters = null, [FromQuery] RequestOrder? order = null) {
-        List<Category> categories = (await this._categoryService.Get(filters, order)).ToList();
+    public async Task<ActionResult<IEnumerable<CategoryDto>>> Get([FromQuery] RequestFilter[]? filters = null, [FromQuery] RequestOrder? order = null, [FromQuery] RequestPagination? pagination = null) {
+        List<Category> categories = (await this._categoryService.Get(filters, order, pagination)).ToList();
 
         List<CategoryDto> categoryDtos = this._mapper.Map<List<CategoryDto>>(categories);
 

@@ -6,4 +6,6 @@ public interface IRepositoryHelper<T> {
     public IQueryable<T> ApplyFilters(IQueryable<T> query, RequestFilter[]? filters);
 
     public IQueryable<T> ApplyOrder(IQueryable<T> query, RequestOrder? order);
+
+    public IQueryable<T> ApplyPagination(IQueryable<T> query, RequestPagination? pagination);
 }

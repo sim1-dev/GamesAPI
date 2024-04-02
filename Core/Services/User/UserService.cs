@@ -14,8 +14,8 @@ public class UserService : IUserService {
         this._mapper = mapper;
     }
 
-    public async Task<IEnumerable<User>> Get(RequestFilter[]? filters, RequestOrder? order) {
-        IEnumerable<User> users = await this._userRepository.Get(filters, order);
+    public async Task<IEnumerable<User>> Get(RequestFilter[]? filters, RequestOrder? order, RequestPagination? pagination) {
+        IEnumerable<User> users = await this._userRepository.Get(filters, order, pagination);
         return users;
     }
 

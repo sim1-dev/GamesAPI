@@ -16,11 +16,12 @@ public class UserRepository : IUserRepository {
         this._repositoryHelper = repositoryHelper;
     }
 
-    public async Task<IEnumerable<User>> Get(RequestFilter[]? filters, RequestOrder? order) {
+    public async Task<IEnumerable<User>> Get(RequestFilter[]? filters, RequestOrder? order, RequestPagination? pagination) {
         IQueryable<User> usersQuery = _db.Users;
 
         usersQuery = _repositoryHelper.ApplyFilters(usersQuery, filters);
         usersQuery = _repositoryHelper.ApplyOrder(usersQuery, order);
+        usersQuery = _repositoryHelper.ApplyPagination(usersQuery, pagination);
 
         return await usersQuery.ToListAsync();
     }
